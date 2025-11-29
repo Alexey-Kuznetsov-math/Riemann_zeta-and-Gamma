@@ -11,7 +11,7 @@ function f=ln_gamma(z)
 % Email: akuznets@yorku.ca
 %
 % Created: 11-Nov-2025
-% Last updated: 11-Nov-2025
+% Last updated: 29-Nov-2025
 %
 % References:
 % [1] A. Kuznetsov, "Computing the Barnes G-function and the gamma function
@@ -19,7 +19,7 @@ function f=ln_gamma(z)
 %     Vol. 411, 2022, 114270. https://doi.org/10.1016/j.cam.2022.114270
 %
 % [2] A. Kuznetsov, A. Mohammadioroojeh, "Approximating functions on R^+
-%     by exponential sums", 2025, preprint, https://arxiv.org/abs/2508.19095
+%     by exponential sums", 2025, https://arxiv.org/abs/2508.19095
 %
 % License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 % -------------------------------------------------------------------------
@@ -53,8 +53,8 @@ function f=ln_gamma_half_plane(z)
         5.1324321142829496e-4+1.31127415401525033e-3i];
     l=[3.036399609619316394+2.183538146270238962i
        2.619619673091566707+1.285513733113457465i 
-       2.236468161644125811-6.451943678012780725e-01i
-       1.822691064348029853+1.260996493971840621e-01i];
+       2.236468161644125811-6.451943678012780725e-1i
+       1.822691064348029853+1.260996493971840621e-1i];
     cr=[ 1.91267259422448627e-12
         -1.34922683153592188e-3
         -8.28182554958193984e-4
