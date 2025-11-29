@@ -1,5 +1,5 @@
 # Riemann_zeta-and-Gamma
-Fortran and MATLAB code for computing the Riemann zeta and log Gamma functions in the entire complex plane. 
+Fortran, MATLAB and Python code for computing the Riemann zeta and log Gamma functions in the entire complex plane. 
 
 **********************************************************************************************************************
 
@@ -36,7 +36,7 @@ To compile and run the test.f90 program on Linux with the gfortran compiler, use
 
 **********************************************************************************************************************   
 
-MATLAB function Riemann_zeta(s) returns an approximation to zeta(s) for complex input s.
+MATLAB and Python function Riemann_zeta(s) returns an approximation to zeta(s) for complex input s.
 The input s can be a scalar or vector.
 
   For |Im(s)|<100   the approximation is correct to around 13 decimal digits;
@@ -53,7 +53,7 @@ The computational complexity is O(sqrt(|Im(s)|)) in the strip -4 < Re(s) < 5, an
 
 **********************************************************************************************************************  
 
-MATLAB function ln_gamma(z) computes the logarithm of the Gamma function in the entire complex plane to double precision.
+MATLAB and Python function ln_gamma(z) computes the logarithm of the Gamma function in the entire complex plane to double precision.
 The input z can be a scalar, vector, or array. 
 
 ********************************************************************************************************************** 
