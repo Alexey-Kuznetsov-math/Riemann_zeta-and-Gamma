@@ -1,16 +1,16 @@
 # Riemann_zeta-and-Gamma
-Fortran, MATLAB and Python code for computing the Riemann zeta and log Gamma functions in the entire complex plane. 
+Fortran, MATLAB and Python code for computing the Riemann zeta and log Gamma functions. 
 
 **********************************************************************************************************************
 
-Fortran90 function Riemann_zeta(s) computes the Riemann zeta function in the entire complex plane.
+Fortran90 function Riemann_zeta(s) computes the Riemann zeta function for complex values of s.
 
 The input s must be a scalar of type complex(kind=16) (note that this function is not vectorized).
 
 The precision is close to quadruple:
-    For |Im(s)| < 100   the approximation is correct to about 31 decimal digits;
-    For |Im(s)| < 1000  the approximation is correct to about 30 decimal digits;
-    For |Im(s)| < 10000 the approximation is correct to about 29 decimal digits.
+    For |Im(s)| < 100   the result is correct to about 31 decimal digits;
+    For |Im(s)| < 1000  the result is correct to about 30 decimal digits;
+    For |Im(s)| < 10000 the result is correct to about 29 decimal digits.
 
 For larger values of |Im(s)|, the accuracy continues to decrease in a similar way: with every increase of |Im(s)|
 by a factor of ten, we lose approximately one decimal digit of precision.
