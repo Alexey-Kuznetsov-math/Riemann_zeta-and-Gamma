@@ -73,9 +73,13 @@ References:
 **********************************************************************************************************************
 
 Author: Alexey Kuznetsov
+
 York University, Toronto, Canada
+
 Website: https://kuznetsovmath.ca/
+
 Email: akuznets@yorku.ca
 
 Created: 28-Nov-2025
+
 Last updated: 2-Dec-2025     
