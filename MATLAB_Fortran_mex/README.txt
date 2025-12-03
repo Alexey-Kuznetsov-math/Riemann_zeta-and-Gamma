@@ -1,60 +1,49 @@
 Author: Alexey Kuznetsov
 York University, Toronto, Canada
-Website: [https://kuznetsovmath.ca/](https://kuznetsovmath.ca/)
-Email: [akuznets@yorku.ca](mailto:akuznets@yorku.ca)
+Website: https://kuznetsovmath.ca/
+Email: akuznets@yorku.ca
 
 Created: 1-Dec-2025
 Last updated: 1-Dec-2025
 
-License: BSD 3-Clause ([https://opensource.org/licenses/BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause))
-
+License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 **********************************************************************************************************************
-
 The Fortran 90 function `Riemann_zeta(s)` computes the Riemann zeta function for complex scalar arguments `s` of type `complex(kind=16)`.
 The output is also `complex(kind=16)`, and the accuracy is at least 17 decimal digits for |Im(s)| < 10^{12}.
 
-This Fortran function uses the approximation  zeta_{12}(s)  derived in [1] (see the references below).
+This Fortran function uses the approximation zeta_12(s) derived in [1] (see the references below).
 It also uses a quadruple-precision implementation of the gamma function, developed in [2,3].
-The computational complexity is O(sqrt |Im(s)|) in the strip -6 < \Re(s) < 7, and O(1) everywhere else in the complex plane.
+The computational complexity is O(sqrt(|Im(s)|)) in the strip -6 < Re(s) < 7, and O(1) everywhere else in the complex plane.
 
 The MEX file provides an interface layer between MATLAB and the Fortran 90 implementation of the Riemann zeta function.
-The routine `mexFunction` receives MATLAB inputs as `mxArray` pointers, extracts the real and (optionally) imaginary
-parts as double-precision arrays, promotes them to `complex(kind=16)`, and calls the Fortran routine `Riemann_zeta` for each element.
-The results are then converted back to double-precision complex values and stored in a new `mxArray`, which is returned to MATLAB
+The routine mexFunction receives MATLAB inputs as mxArray pointers, extracts the real and (optionally) imaginary
+parts as double-precision arrays, promotes them to complex(kind=16), and calls the Fortran routine Riemann_zeta for each element.
+The results are then converted back to double-precision complex values and stored in a new mxArray, which is returned to MATLAB
 as a standard MATLAB variable.
-
 **********************************************************************************************************************
-
 To compile and run this code, type the following commands in the MATLAB Command Window:
 
-
->> mex -setup Fortran
->> mex -c Riemann_zeta_module.f90
->> mex -R2017b Riemann_zeta_mex.F90 Riemann_zeta_module.o
-
+    >> mex -setup Fortran
+    >> mex -c Riemann_zeta_module.f90
+    >> mex -R2017b Riemann_zeta_mex.F90 Riemann_zeta_module.o
 
 After successful compilation, values of the Riemann zeta function can be computed in any MATLAB script/function or in the Command Window via
 
+    f = Riemann_zeta_mex(s)
 
-f=Riemann_zeta_mex(s)
-
-
-where `s` may be a real or complex scalar, vector, or array.
-
+where s may be a real or complex scalar, vector, or array.
 **********************************************************************************************************************
+The program test.m compares the accuracy and performance of Riemann_zeta_mex(s) with the MATLAB built-in function zeta(s).
+A typical output is shown below. We see that Riemann_zeta_mex achieves full double-precision accuracy and is significantly faster
+than the built-in zeta(s):
 
-The program `test.m` compares the accuracy and performance of `Riemann_zeta_mex(s)` with the MATLAB built-in function `zeta(s)`.
-A typical output is shown below. We see that `Riemann_zeta_mex` achieves full double-precision accuracy and is significantly faster
-than the built-in `zeta(s)`:
+    22x faster in the range |Im(s)| < 100
+    44x faster in the range |Im(s)| < 1000
+    196x faster in the range |Im(s)| < 10 000
+    2426x faster in the range |Im(s)| < 100 000
 
-  22× faster in the range |Im(s)| < 100
-  44× faster in the range |Im(s)| < 1000
-  196× faster in the range |Im(s)| < 10 000
-  2426× faster in the range |Im(s)| < 100 000
-
-Example output of `test.m` on a desktop machine
+Example output of test.m on a desktop machine
 (Lenovo ThinkCentre M90q Gen 3, Intel Core i5-12500, 16 GB RAM):
-
 >> test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_mex function against the MATLAB built-in function zeta(s)
