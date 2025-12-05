@@ -2,17 +2,7 @@ function f=Riemann_zeta(s)
 % Riemann_zeta approximates the Riemann zeta function in the entire complex plane
 %
 %   f = Riemann_zeta(s) returns an approximation to zeta(s) for complex input s
-%   The input s can be a scalar or vector
-%
-% For |Im(s)|<100 the approximation is correct to around 13 decimal digits;
-% For |Im(s)|<1000 the approximation is correct to around 12 decimal digits;
-% For |Im(s)|<10000 the approximation is correct to around 11 decimal digits;
-% For larger values of |Im(s)| the accuracy will continue to decrease in a similar way: 
-% with every increase of Im(s) by a factor of ten we lose approximately one decimal digit of precision. 
-% More details can be found at the end of Section 1 in [1].
-%
-% When |Im(s)|>200 and -4<Re(s)<5 we use the approximation zeta_8(s) developed in [1]. 
-% For other values of s we use either Euler-Maclaurin formula or direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}.
+%   The input s can be a scalar, a vector or an array
 %
 % This function requires ln_gamma function (which computes the logarithm of the Gamma function 
 % in the entire complex plane)
@@ -23,10 +13,7 @@ function f=Riemann_zeta(s)
 % Email: akuznets@yorku.ca
 %
 % Created: 18-Nov-2025
-% Last updated: 29-Nov-2025
-%
-% References:
-% [1] A. Kuznetsov, "Simple and accurate approximations to the Riemann zeta function", 2025, https://arxiv.org/abs/2503.09519
+% Last updated: 5-Dec-2025
 %
 % License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 %--------------------------------------------------------------------------
@@ -56,15 +43,15 @@ function f=Riemann_zeta_half_plane(s)
     i4=find((real(s)<5)&(imag(s)<-200)); 
     f=zeros(size(s));
     if (~isempty(i1)) % in the half-plane Re(s)>=5 we compute zeta(s) by summing \sum_{k=1}^{\infty} k^(-s) 
-        f(i1)=zeta_main_sum(s(i1));
+        f(i1)=zeta_summation(s(i1));
     end
-    if (~isempty(i2)) % if 0<Re(s)<5 and |Im(s)|<=200, we use Euler-Maclaurin method to compute zeta(s)
+    if (~isempty(i2)) % if Re(s)<5 and |Im(s)|<=200, we use Euler-Maclaurin method to compute zeta(s)
         f(i2)=zeta_Euler_Maclaurin(s(i2));
     end
-    if (~isempty(i3)) % if 0<Re(s)<5 and Im(s)>200, we use zeta_8(s) approximation
+    if (~isempty(i3)) % if Re(s)<5 and Im(s)>200, we use zeta_8(s) approximation
         f(i3)=zeta_8(s(i3));
     end
-    if (~isempty(i4)) % if 0<Re(s)<5 and Im(s)<-200, we use zeta_8(s) approximation
+    if (~isempty(i4)) % if Re(s)<5 and Im(s)<-200, we use zeta_8(s) approximation
         f(i4)=conj(zeta_8(conj(s(i4))));
     end 
 end   
@@ -109,7 +96,8 @@ function f=zeta_8(s)
         f=1+chi;
         N=floor(sqrt(imag(s)/(2*pi)));
         for n=2:max(N)  %compute the main sum 
-            f=f+(n<=N).*(exp(-s*log(n))+chi.*exp((s-1)*log(n))); 
+            u=n.^(-s);
+            f=f+(n<=N).*(u+chi./(n*u)); 
         end
         M=N+0.5;
         s1=1-conj(s);
@@ -125,7 +113,7 @@ function f=zeta_8(s)
     end
 end
 %##########################################################################
-function f=zeta_main_sum(s)
+function f=zeta_summation(s)
 % computes zeta(s)=\sum_{n=1}^{\infty} n^{-s}  
 % We remove from this sum all numbers divisible by 2,3,5,7,11,13,17,19 and truncate the resulting sum at n=500
 % This results in a more efficient algorithm (fewer terms in the main sum)
@@ -142,15 +130,16 @@ end
 %##########################################################################
 function f=zeta_Euler_Maclaurin(s)
 % computes zeta(s) via Euler-Maclaurin summation 
-% we use formula (25.2.10) at https://dlmf.nist.gov/25.2 with N=200 and n=9
+% we use formula (25.2.10) at https://dlmf.nist.gov/25.2 with N=100 and n=15
 %--------------------------------------------------------------------------
 % precompute b(k)=B_{2k}/(2k)!, where B_{k} are Bernoulli numbers
     b=[8.33333333333333e-2,-1.38888888888889e-3,3.306878306878306e-05,-8.267195767195768e-07,2.087675698786810e-08, ...
-      -5.284190138687493e-10,1.338253653068468e-11,-3.389680296322583e-13,8.586062056277845e-15];
-    N=200;
+      -5.284190138687493e-10,1.338253653068468e-11,-3.389680296322583e-13,8.586062056277845e-15,-2.174868698558061e-16, ...
+       5.509002828360229e-18, -1.395446468581252e-19, 3.534707039629467e-21,-8.953517427037546e-23,2.267952452337683e-24];
+    N=100;
     m=s/N;
     f=zeros(size(s));
-    for k=1:9
+    for k=1:15
         f=f+b(k)*m;
         m=m.*(s+2*k-1).*(s+2*k)/N^2;
     end
