@@ -1,5 +1,5 @@
 # Riemann_zeta-and-Gamma
-Fortran, MATLAB and Python code for computing the Riemann zeta and log Gamma functions. 
+Fortran, MATLAB, and Python code for computing the Riemann zeta and log Gamma functions for complex values of the variable. 
 
 **********************************************************************************************************************
 
