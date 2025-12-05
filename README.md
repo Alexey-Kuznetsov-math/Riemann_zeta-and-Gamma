@@ -22,11 +22,11 @@ More details on this loss of precision for large values of |Im(s)| can be found 
 The computational complexity is O(sqrt(|Im(s)|)) in the critical strip. In other regions of the complex plane it is either O(sqrt(|Im(s)|))  
 (if we are close to the critical strip) or O(1). Depending on the value of s, we use one of the following methods to compute zeta(s):
 
-    i) an approximation zeta_30(s) developed in [1],
+i) an approximation zeta_30(s) developed in [1],
 	
-    ii) Euler-Maclaurin summation formula, or
+ii) Euler-Maclaurin summation formula, or
 	
-    iii) direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}, truncated at an appropriate N
+iii) direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}, truncated at an appropriate N
 
 **********************************************************************************************************************
 
@@ -41,11 +41,11 @@ This function is based on the approximation to log(Gamma(z)) developed in [2], w
 MATLAB and Python function Riemann_zeta(s) returns an approximation to zeta(s) for complex input s.
 The input s can be a scalar or vector.
 
-  For |Im(s)|<100   the approximation is correct to around 13 decimal digits;
+For |Im(s)|<100   the approximation is correct to around 13 decimal digits;
   
-  For |Im(s)|<1000  the approximation is correct to around 12 decimal digits;
+For |Im(s)|<1000  the approximation is correct to around 12 decimal digits;
   
-  For |Im(s)|<10000 the approximation is correct to around 11 decimal digits.
+For |Im(s)|<10000 the approximation is correct to around 11 decimal digits.
   
 For larger values of |Im(s)| the accuracy will continue to decrease in a similar way: 
 with every increase of Im(s) by a factor of ten we lose approximately one decimal digit of precision. 
@@ -57,11 +57,11 @@ The computational complexity is O(sqrt(|Im(s)|)) in the strip -4 < Re(s) < 5, an
 
 The function Riemann_zeta(s), while not as accurate as the built-in MATLAB function zeta(s), is significantly faster than the built-in zeta(s):
 
-  567× faster in the range |Im(s)| < 100
+567× faster in the range |Im(s)| < 100
   
-  1100× faster in the range |Im(s)| < 1000
+1100× faster in the range |Im(s)| < 1000
   
-  12256× faster in the range |Im(s)| < 10 000
+12256× faster in the range |Im(s)| < 10 000
 
 **********************************************************************************************************************  
 
@@ -84,22 +84,22 @@ as a standard MATLAB variable.
 The computational complexity is O(sqrt(|Im(s)|)) in the critical strip. In other regions of the complex plane it is either O(sqrt(|Im(s)|))  
 (if we are close to the critical strip) or O(1). Depending on the value of s, we use one of the following methods to compute zeta(s):
 
-    i) an approximation zeta_12(s) developed in [1],
+i) an approximation zeta_12(s) developed in [1],
 	
-    ii) Euler-Maclaurin summation formula, or
+ii) Euler-Maclaurin summation formula, or
 	
-    iii) direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}, truncated at an appropriate N
+iii) direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}, truncated at an appropriate N
 
 The function Riemann_zeta_mex achieves full double-precision accuracy and is significantly faster
 than the built-in MATLAB function zeta(s):
 
-	58x faster in the range |Im(s)|<100
+58x faster in the range |Im(s)|<100
 	
-	68x faster in the range |Im(s)|<1000
+68x faster in the range |Im(s)|<1000
 	
-	315x faster in the range |Im(s)|<10 000
+315x faster in the range |Im(s)|<10 000
 	
-	3955x faster in the range |Im(s)|<100 000    
+3955x faster in the range |Im(s)|<100 000    
 
 ********************************************************************************************************************** 
 
