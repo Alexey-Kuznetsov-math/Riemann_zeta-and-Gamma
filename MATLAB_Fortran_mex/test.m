@@ -1,6 +1,5 @@
 clear all;
 %**************************************************************
-% Testing the Riemann zeta function against MATLAB built-in function zeta(s)
 N=1000;
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 disp('Testing the Riemann_zeta_mex function against the MATLAB built-in function zeta(s)')
@@ -15,7 +14,7 @@ f1=Riemann_zeta_mex(s);
 T1=toc;
 disp(T1);
 disp(' ')
-disp('Computation time (in seconds) of the MATLAB built-in function zeta(s) for these 1000 random numbers:')
+disp('Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:')
 tic
 f2=zeta(s);
 T2=toc;
@@ -33,7 +32,7 @@ f1=Riemann_zeta_mex(s);
 T1=toc;
 disp(T1);
 disp(' ')
-disp('Computation time (in seconds) of the MATLAB built-in function zeta(s) for these 1000 random numbers:')
+disp('Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:')
 tic
 f2=zeta(s);
 T2=toc;
@@ -51,7 +50,7 @@ f1=Riemann_zeta_mex(s);
 T1=toc;
 disp(T1);
 disp(' ')
-disp('Computation time (in seconds) of the MATLAB built-in function zeta(s) for these 1000 random numbers:')
+disp('Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:')
 tic
 f2=zeta(s);
 T2=toc;
@@ -69,11 +68,10 @@ f1=Riemann_zeta_mex(s);
 T1=toc;
 disp(T1);
 disp(' ')
-disp('Computation time (in seconds) of the MATLAB built-in function zeta(s) for these 1000 random numbers:')
+disp('Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:')
 tic
 f2=zeta(s);
 T2=toc;
 disp(T2);
 disp('the maximum relative error is:')
 disp(max(abs(f1./f2-1)))
-
