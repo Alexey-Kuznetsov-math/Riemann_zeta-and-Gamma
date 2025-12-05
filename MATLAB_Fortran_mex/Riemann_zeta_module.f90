@@ -2,10 +2,10 @@
 !York University, Toronto, Canada
 !Website: https://kuznetsovmath.ca/
 !Email: akuznets@yorku.ca
-
+!
 !Created: 1-Dec-2025
-!Last updated: 1-Dec-2025  
-
+!Last updated: 5-Dec-2025  
+!
 !License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 !#######################################################################
 module Riemann_zeta_module
@@ -14,7 +14,7 @@ module Riemann_zeta_module
 	complex(kind=16), parameter  :: i_16=(0.0q0,1.0q0) 
 contains
 !#######################################################################
-	function Riemann_zeta(s) result(f)
+		function Riemann_zeta(s) result(f)
 !--------------------------------------------------------------------------	
 	implicit none
 	complex (kind=16), intent(in)	:: s	
@@ -39,43 +39,126 @@ contains
 	implicit none
 	complex (kind=16), intent(in)	:: s	
 	complex (kind=16)		:: f
+	real(kind=16)			:: N_sum, N_EM, N_12
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
-	if (s%re>=7) then ! in the half-plane Re(s)>=7 we compute zeta(s) by summing \sum_{n=1}^{\infty} n^(-s) 
-		f=zeta_main_sum(s,40)
-	else ! if Re(s)<7 and |Im(s)|<150, we use Euler-Maclaurin method to compute zeta(s)
-		if (abs(s%im)<150) then 
+	N_sum=8*exp(45/(s%re-1))/30  ! computational complexity of zeta_summation function -- counting the number of evaluations of k^{-s}
+	N_EM=abs(s)/2+10		    ! computational complexity of zeta_Euler_Maclaurin function			
+	N_12=sqrt(abs(s%im)/(2*pi_16))/2+50	! computational complexity of zeta_12 function
+	if (abs(s%im)<150) then 
+		if (s%re<4) then
 			f=zeta_Euler_Maclaurin(s)
-		elseif (s%im>=150) then ! if Re(s)<7 and Im(s)>=150, we use zeta_12(s) approximation
-			f=zeta_12(s)
-		else			! if Re(s)<7 and Im(s)<=150, we also use zeta_12(s) approximation
-			f=conjg(zeta_12(conjg(s)))
+		else	
+			if (N_sum<N_EM) then
+				f=zeta_summation(s)
+			else
+				f=zeta_Euler_Maclaurin(s)
+			end if
 		end if
+	elseif (s%im>=150) then 
+		if (s%re<3) then
+			f=zeta_12(s)
+		else	
+			if (N_sum<N_12) then
+				f=zeta_summation(s)
+			else
+				f=zeta_12(s)
+			end if
+		end if
+			
+	else
+		if (s%re<3) then
+			f=conjg(zeta_12(conjg(s)))
+		else	
+			if (N_sum<N_12) then
+				f=zeta_summation(s)
+			else
+				f=conjg(zeta_12(conjg(s)))
+			end if
+		end if
+				
 	end if
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 	end function Riemann_zeta_half_plane
-!#######################################################################
-	function zeta_main_sum(s,N_max) result(f)
-! approximates the Riemann zeta function f=zeta(s)=\sum\limits_{n=1}^{\infty} n^{-s} in the half-plane re(s)>10
-! the infinite series is truncated at around N_max*30	
+!#######################################################################	
+	function zeta_summation(s) result(f)
+! approximates the Riemann zeta function f=zeta(s)=\sum_{n=1}^{\infty} n^{-s} 	
 ! to have more efficient computation, we instead compute g(s)=((1-2^{-s})(1-3^{-s})(1-5^{-s})) zeta(s) 
-! which is the Dirichlet series g(z)=\sum\limits_{n>=1, gcd(n,30)=1} n^{-s} 
-! this trick removes about three-quarters of the terms from the original sum \sum\limits_{n=1}^{\infty} n^{-s}
+! which is the Dirichlet series g(z)=\sum_{n>=1, gcd(n,30)=1} n^{-s} 
+! this trick removes about three-quarters of the terms from the original sum \sum_{n=1}^{\infty} n^{-s}
+! we truncate the Dirichlet series for g(z) at n=N*30
+! for Re(s)>2 the error is smaller than (30*N)^(1-Re(s))
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 	implicit none
 	complex (kind=16), intent(in)	:: s
-	integer, intent(in)		:: N_max
 	complex (kind=16)		:: f
 	integer, parameter 		:: k(1:8)=(/1, 7, 11, 13, 17, 19, 23, 29/) ! residue classes mod 30 that are co-prime to 30
-	integer				:: j, n(0:N_max)
+	integer				:: N, j, l
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	n=30*(/(j, j = 0, N_max)/)
+	N=floor(exp(45/(s%re-1))/30)  ! choose N so that the error is smaller than 10^{-19}
 	f=0
 	do j=1,8
-		f=f+sum((k(j)+n)**(-s))
+		do l=0,N
+			f=f+(k(j)+30*l)**(-s)
+		end do
 	end do
 	f=f/((1-2**(-s))*(1-3**(-s))*(1-5**(-s)))
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	end function zeta_main_sum
+	end function zeta_summation
+!#######################################################################
+	function RS_main_sum(s,N) result(f)
+! computes the two main sums in the Riemann-Siegel formula: f(1)=\sum_{n=1}^{N} n^{-s} and f(2)=\sum_{n=1}^{N} n^{s-1}
+! we remove almost 50% of terms from these sums by using the following result:
+! denote F(x)=\sum_{1<=n<=x} n^{-s} and G(x)=\sum_{1<=2n+1<=x} (2n+1)^{-s}
+! then F(x)=G(x)+2^{-s} G(x/2)+4^{-s} G(x/4)+8^{-s} G(x/8)+16^{-s} F(x/16)
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
+	complex (kind=16), intent(in)	:: s
+	integer, intent(in)		:: N
+	complex (kind=16)		:: f(1:2), g2(1:2), g4(1:2), g8(1:2), u
+	integer				:: k
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
+	if (N<16) then
+		f=1
+		do k=2,N
+			u=k**(-s)
+			f(1)=f(1)+u
+			f(2)=f(2)+1/(u*k)
+		end do
+	else
+		f=1
+		do k=2,(N/16)
+			u=k**(-s)
+			f(1)=f(1)+u
+			f(2)=f(2)+1/(u*k)
+		end do
+		g8=1
+		do k=1,((N/8)-1)/2
+			u=(2*k+1)**(-s)
+			g8(1)=g8(1)+u
+			g8(2)=g8(2)+1/(u*(2*k+1))
+		end do		
+		g4=g8
+		do k=((N/8)+1)/2,((N/4)-1)/2
+			u=(2*k+1)**(-s)
+			g4(1)=g4(1)+u
+			g4(2)=g4(2)+1/(u*(2*k+1))
+		end do
+		g2=g4
+		do k=((N/4)+1)/2,((N/2)-1)/2
+			u=(2*k+1)**(-s)
+			g2(1)=g2(1)+u
+			g2(2)=g2(2)+1/(u*(2*k+1))
+		end do
+		u=2**(-s)
+		f(1)=u**4*f(1)+u**3*g8(1)+u**2*g4(1)+(u+1)*g2(1)
+		u=1/(u*2)
+		f(2)=u**4*f(2)+u**3*g8(2)+u**2*g4(2)+(u+1)*g2(2)
+		do k=((N/2)+1)/2,(N-1)/2
+			u=(2*k+1)**(-s)
+			f(1)=f(1)+u
+			f(2)=f(2)+1/(u*(2*k+1))
+		end do
+	end if
+	end function RS_main_sum		
 !#######################################################################
 	function zeta_Euler_Maclaurin(s) result(f)
 	implicit none
@@ -114,7 +197,7 @@ contains
     -9.73635307264669103526762127925048019q-39,&
     2.46624704420068095710640028028884984q-40/)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-	N=max(floor(abs(s)/2),20)
+	N=floor(abs(s)/2)+10
 	N2=N**2
 	m=s/N
 	f=0
@@ -135,7 +218,7 @@ contains
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  	
 	implicit none
 	complex (kind=16), intent(in)	:: s
-	complex (kind=16)		:: f, f1, f2, s1, chi, I1, I2
+	complex (kind=16)		:: f, f1, f2, s1, chi, I1, I2, g(1:2)
 	real (kind=16)			:: M, u
 	integer				:: k, j, N	
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -171,14 +254,8 @@ contains
 	! compute chi(s)=(2*pi)^s/(2*cos(pi*s/2)*gamma(s))
 	chi=exp(s*log(2*pi_16)+0.5q0*pi_16*i_16*s-log(1+exp(pi_16*i_16*s))-ln_gamma(s))
 	!compute the main sum
-	N=floor(sqrt(s%im/(2.0q0*pi_16)))
-	f1=1
-	f2=1
-	do j=2,N
-		u=log(j+0.0q0)
-		f1=f1+exp(-s*u)
-		f2=f2+exp((s-1)*u)
-	end do
+	N=floor(sqrt(s%im/(2*pi_16)))
+	g=RS_main_sum(s,N) ! compute the main sums in the Riemann-Siegel formula
 	!compute I1=I_{M,12}(s) and  I2=conjg(I_{M,12}(1-conjg(s)))
 	M=N+0.5q0	
 	I1=exp(-s*log(M))*(omega0+sum(omega*(exp(-2*pi_16*M*lambda-s*log(1+i_16*lambda/M))&
@@ -186,7 +263,7 @@ contains
 	s1=1-conjg(s)	
 	I2=conjg(exp(-s1*log(M))*(omega0+sum(omega*(exp(-2*pi_16*M*lambda-s1*log(1+i_16*lambda/M))&
 		+exp(2*pi_16*M*lambda-s1*log(1-i_16*lambda/M))))))
-	f=f1+chi*f2-0.5q0*(-1)**N*(I1+chi*I2)
+	f=g(1)+chi*g(2)-0.5q0*(-1)**N*(I1+chi*I2)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
 	end function zeta_12
 !#######################################################################
@@ -273,4 +350,3 @@ contains
 	end function ln_gamma
 !#######################################################################
 end module Riemann_zeta_module
-
