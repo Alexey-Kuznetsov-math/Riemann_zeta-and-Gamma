@@ -68,6 +68,9 @@ g[3]=1.0/240
 g[4]=-1.0/132
 print('maximum error=',np.max(np.abs(f[:5]-g[:5])))
 
+
+# the zeros of zeta(s) used in the next three tests
+# were downloaded from https://www-users.cse.umn.edu/~odlyzko/zeta_tables/index.html
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 print('Test 5 : compute zeta(1/2+i*t_k) for the first five non-trivial zeros 1/2+i*t_k of zeta(s)')
 t=np.zeros(5,dtype=np.float64)
@@ -92,7 +95,19 @@ for k in range(5):
     print(Riemann_zeta(s))
 
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('Test 7 : plot the Riemann-Siegel function Z(t) for 0<t<100, 1000<t<1100 and 10000<t<10100')
+print('Test 7 : compute zeta(1/2+i*t_k) for the first five non-trivial zeros 1/2+i*t_k of zeta(s) at height t=10^6')
+print('note that these zeros are only correct to 10^{-9}, so the values of zeta(1/2+i*t_k) should be of the same order of magnitude')
+t[0]=1000000.584097696
+t[1]=1000000.828343490
+t[2]=1000001.435265267
+t[3]=1000001.905648406
+t[4]=1000002.877617740
+for k in range(5):
+    s=0.5+1j*t[k]
+    print(Riemann_zeta(s))     
+
+print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+print('Test 8 : plot the Riemann-Siegel function Z(t) for 0<t<100, 1000<t<1100 and 10000<t<10100')
 t=np.linspace(0,100,10000)
 g=ln_gamma(0.25+0.5j*t)
 f0=Riemann_zeta(0.5+1j*t)*np.exp(1j*g.imag-0.5j*t*np.log(np.pi))
