@@ -13,14 +13,6 @@ function f=ln_gamma(z)
 % Created: 11-Nov-2025
 % Last updated: 29-Nov-2025
 %
-% References:
-% [1] A. Kuznetsov, "Computing the Barnes G-function and the gamma function
-%     in the entire complex plane", Journal of Computational and Applied Mathematics,
-%     Vol. 411, 2022, 114270. https://doi.org/10.1016/j.cam.2022.114270
-%
-% [2] A. Kuznetsov, A. Mohammadioroojeh, "Approximating functions on R^+
-%     by exponential sums", 2025, https://arxiv.org/abs/2508.19095
-%
 % License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 % -------------------------------------------------------------------------
     i1=find(real(z)>=1.5);
