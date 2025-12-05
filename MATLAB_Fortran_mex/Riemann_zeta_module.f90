@@ -41,7 +41,7 @@ contains
 	complex (kind=16)		:: f
 	real(kind=16)			:: N_sum, N_EM, N_12
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
-	N_sum=8*exp(45/(s%re-1))/30  ! computational complexity of zeta_summation function -- counting the number of evaluations of k^{-s}
+	N_sum=8*exp(45/max(s%re-1,0.5q0))/30  ! computational complexity of zeta_summation function -- counting the number of evaluations of k^{-s}
 	N_EM=abs(s)/2+10		    ! computational complexity of zeta_Euler_Maclaurin function			
 	N_12=sqrt(abs(s%im)/(2*pi_16))/2+50	! computational complexity of zeta_12 function
 	if (abs(s%im)<150) then 
