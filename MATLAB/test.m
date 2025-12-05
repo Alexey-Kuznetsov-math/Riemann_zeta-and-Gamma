@@ -37,12 +37,12 @@ title('Z(t) for 1000<t<1100');
 subplot(3,1,3);
 plot(t2,f2);grid;
 title('Z(t) for 10000<t<10100');
-
+pause(0.1);
 %**************************************************************
 % Test 4: Testing the Riemann zeta function against MATLAB built-in function zeta(s)
 N=1000;
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-disp('Test 4: Testing the Riemann_zeta function against the MATLAB built-in function zeta(s)')
+disp('Test 4: Testing the Riemann_zeta function against MATLAB built-in function zeta(s)')
 disp(' ')
 disp('Test 4(a): computing the relative error Riemann_zeta(s)/zeta(s)-1')
 disp('for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<100, -5<Re(s)<10:')
@@ -54,7 +54,7 @@ f1=Riemann_zeta(s);
 T1=toc;
 disp(T1);
 disp(' ')
-disp('Computation time (in seconds) of the MATLAB built-in function zeta(s) for these 1000 random numbers:')
+disp('Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:')
 tic
 f2=zeta(s);
 T2=toc;
@@ -72,7 +72,7 @@ f1=Riemann_zeta(s);
 T1=toc;
 disp(T1);
 disp(' ')
-disp('Computation time (in seconds) of the MATLAB built-in function zeta(s) for these 1000 random numbers:')
+disp('Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:')
 tic
 f2=zeta(s);
 T2=toc;
@@ -90,14 +90,13 @@ f1=Riemann_zeta(s);
 T1=toc;
 disp(T1);
 disp(' ')
-disp('Computation time (in seconds) of the MATLAB built-in function zeta(s) for these 1000 random numbers:')
+disp('Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:')
 tic
 f2=zeta(s);
 T2=toc;
 disp(T2);
 disp('the maximum relative error is:')
 disp(max(abs(f1./f2-1)))
-
 
 
 
