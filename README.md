@@ -59,7 +59,7 @@ MATLAB and Python function ln_gamma(z) computes the logarithm of the Gamma funct
 The input z can be a scalar, vector, or array. 
 
 ********************************************************************************************************************** 
-MATLAB_Forran_mex: The Fortran90 function Riemann_zeta(s) computes the Riemann zeta function for complex scalar values of s (complex(kind=16)). 
+MATLAB_Fortran_mex: The Fortran90 function Riemann_zeta(s) computes the Riemann zeta function for complex scalar values of s (complex(kind=16)). 
 The output of this function is also complex(kind=16) and the accuracy is at least 17 decimal digits for |Im(s)|<10^12. 
 
 This Fortran function uses the approximation zeta_12(s) derived in [1], as well as the quadruple precision log(Gamma(s)) 
