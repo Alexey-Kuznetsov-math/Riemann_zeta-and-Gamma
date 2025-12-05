@@ -4,7 +4,6 @@
 !   f = ln_gamma(z) returns log(Gamma(z)) for any complex input z.
 !   The input z has to be a scalar (this code is not vectorized)
 !
-! The precision is close to quadruple precision: the errors are of order 10^{-33} or smaller
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 ! Author: Alexey Kuznetsov
 ! York University, Toronto, Canada
@@ -13,14 +12,6 @@
 !
 ! Created: 28-Nov-2025
 ! Last updated: 28-Nov-2025
-!
-! References:
-! [1] A. Kuznetsov, "Computing the Barnes G-function and the gamma function
-!     in the entire complex plane", Journal of Computational and Applied Mathematics,
-!     Vol. 411, 2022, 114270. https://doi.org/10.1016/j.cam.2022.114270
-!
-! [2] A. Kuznetsov, A. Mohammadioroojeh, "Approximating functions on R^+
-!     by exponential sums", 2025, https://arxiv.org/abs/2508.19095
 !
 ! License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 	
