@@ -96,4 +96,3 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   deallocate(s_re, s_im, f_re, f_im)
 
 end subroutine mexFunction
-
