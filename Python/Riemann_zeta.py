@@ -16,7 +16,7 @@ def Riemann_zeta(s):
 # Email: akuznets@yorku.ca
 #
 # Created: 29-Nov-2025
-# Last updated: 5-Dec-2025
+# Last updated: 22-March-2026
 #
 # License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 #--------------------------------------------------------------------------
@@ -25,8 +25,9 @@ def Riemann_zeta(s):
     f=np.zeros_like(s,dtype=np.complex128)
 
     i1=s.real>=0.5
-    i2=(s.real<0.5)&(s.imag>=0)
-    i3=(s.real<0.5)&(s.imag<0)
+    i2=(s.real<0.5)&(s.imag>=0)&(np.abs(s)>0.001)
+    i3=(s.real<0.5)&(s.imag<0)&(np.abs(s)>0.001)
+    i4=np.abs(s)<=0.001
 
     if np.any(i1):
         f[i1]=Riemann_zeta_half_plane(s[i1])
@@ -39,6 +40,10 @@ def Riemann_zeta(s):
         w3=s[i3]
         f[i3]=-1j*(2*np.pi)**(w3-1)*(1-np.exp(-1j*np.pi*w3))*np.exp(0.5j*np.pi*w3+ln_gamma(1-w3))*Riemann_zeta_half_plane(1-w3)
 
+    if np.any(i4):
+        w4=s[i4]
+        f[i4]=-0.5+w4*(-0.91893853320467+w4*(-1.003178228+w4*(-1.0007852-w4)))
+        
     if scalar_input:
         return f.item()
     return f
