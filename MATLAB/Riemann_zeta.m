@@ -13,13 +13,14 @@ function f=Riemann_zeta(s)
 % Email: akuznets@yorku.ca
 %
 % Created: 18-Nov-2025
-% Last updated: 5-Dec-2025
+% Last updated: 22-March-2026
 %
 % License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 %--------------------------------------------------------------------------
     i1=find(real(s)>=0.5);
-    i2=find((real(s)<0.5)&(imag(s)>=0));
-    i3=find((real(s)<0.5)&(imag(s)<0));
+    i2=find((real(s)<0.5)&(imag(s)>=0)&(abs(s)>0.001));
+    i3=find((real(s)<0.5)&(imag(s)<0)&(abs(s)>0.001));
+    i4=find((abs(s)<=0.001));
     f=zeros(size(s));
     if (~isempty(i1)) 
         f(i1)=Riemann_zeta_half_plane(s(i1));
@@ -31,6 +32,10 @@ function f=Riemann_zeta(s)
     if (~isempty(i3)) % use reflection formula if Re(s)<0.5
         w3=s(i3);
         f(i3)=-1i*(2*pi).^(w3-1).*(1-exp(-1i*pi*w3)).*exp(0.5i*pi*w3+ln_gamma(1-w3)).*Riemann_zeta_half_plane(1-w3);
+    end
+    if (~isempty(i4)) % use Taylor series when |s|<0.001
+        w4=s(i4);
+        f(i4)=-0.5+w4.*(-0.91893853320467+w4.*(-1.003178228+w4.*(-1.0007852-w4)));
     end
 end
 %##########################################################################
