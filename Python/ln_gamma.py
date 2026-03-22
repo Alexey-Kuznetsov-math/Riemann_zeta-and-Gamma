@@ -12,7 +12,7 @@ def ln_gamma(z):
 # Email: akuznets@yorku.ca
 #
 # Created: 29-Nov-2025
-# Last updated: 29-Nov-2025
+# Last updated: 22-March-2026
 #
 # License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 # -------------------------------------------------------------------------
@@ -77,7 +77,7 @@ def ln_gamma_half_plane(z):
     for j in range(4):
         f=f+c[j]/(z-1+l[j])**3+np.conj(c[j])/(z-1+np.conj(l[j]))**3+cr[j]/(z-1+lr[j])**3
 
-    f=2*f+0.918938533204673+(z-0.5)*np.log(z)-z+0.083333333333333/z
+    f=2*f+0.918938533204673+(z-0.5)*np.log(z)-z+8.333333333333333e-2/z
     return f
 
 
