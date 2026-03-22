@@ -4,7 +4,7 @@
 !Email: akuznets@yorku.ca
 !
 !Created: 1-Dec-2025
-!Last updated: 5-Dec-2025  
+!Last updated: 22-March-2026  
 !
 !License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 !#######################################################################
@@ -22,6 +22,9 @@ contains
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	if (s%re>=0.5q0) then
 		f=Riemann_zeta_half_plane(s)
+	elseif (abs(s)<1.0q-3) then ! use Taylor series if |s| is small
+		f=-0.5q0+s*(-0.9189385332046727417q0+s*(-1.003178227954292q0&
+ 			+s*(-1.000785194477q0+s*(-0.9998792995q0-s))))		
 	else ! use reflection formula for the Riemann zeta function for Re(s)<0.5
 		if (s%im>=0) then
 			f=i_16*(2*pi_16)**(s-1)*(1-exp(i_16*pi_16*s))*exp(-0.5q0*i_16*pi_16*s&
