@@ -56,18 +56,21 @@
 	print *,'maximum error=',maxval(abs(f(1:4)-g(1:4)))	
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	print *, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-	print *, 'Test 5 : compute zeta(s) for s=-1,-3,-5,-7,-9'
+	print *, 'Test 5 : compute zeta(s) for s=0,-1,-3,-5,-7,-9'
 	error=0.0q0
+	s=0.0q0	
+	f(1)=Riemann_zeta(s)
 	do k=1,5 
 		s=1-2*k
-		f(k)=Riemann_zeta(s)
+		f(k+1)=Riemann_zeta(s)
 		print *,f(k)
 	end do
-	g(1)=-1.0q0/12
-	g(2)=1.0q0/120
-	g(3)=-1.0q0/252
-	g(4)=1.0q0/240
-	g(5)=-1.0q0/132
+	g(1)=-0.5q0
+	g(2)=-1.0q0/12
+	g(3)=1.0q0/120
+	g(4)=-1.0q0/252
+	g(5)=1.0q0/240
+	g(6)=-1.0q0/132
 	print *,'maximum error=',maxval(abs(f(1:5)-g(1:5)))
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ! the zeros of zeta(s) used in the next three tests
@@ -109,7 +112,7 @@
 !#######################################################################
 	contains
 !#######################################################################
-		function Riemann_zeta(s) result(f)
+	function Riemann_zeta(s) result(f)
 ! Riemann_zeta computes the Riemann zeta function in the entire complex plane
 !
 !    f = Riemann_zeta(s) computes zeta(s) for complex input s
@@ -122,7 +125,7 @@
 ! Email: akuznets@yorku.ca
 !
 ! Created: 28-Nov-2025
-! Last updated: 5-Dec-2025
+! Last updated: 22-March-2026
 !
 ! License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 !--------------------------------------------------------------------------	
@@ -134,6 +137,9 @@
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	if (s%re>=0.5q0) then
 		f=Riemann_zeta_half_plane(s)
+	elseif (abs(s)<1.0q-4) then ! use Taylor series if |s| is small
+		f=-0.5q0+s*(-0.91893853320467274178032973640561q0+s*(-1.0031782279542924256050500134q0&
+ 		+s*(-1.0007851944770424079602q0+s*(-0.99987929950057116q0+s*(-1.000001940896q0+s*(-1.0000013011q0-s))))))			
 	else ! use reflection formula for the Riemann zeta function for Re(s)<0.5
 		if (s%im>=0) then
 			f=i_16*(2*pi_16)**(s-1)*(1-exp(i_16*pi_16*s))*exp(-0.5q0*i_16*pi_16*s&
@@ -151,11 +157,11 @@
 	implicit none
 	complex (kind=16), intent(in)	:: s	
 	complex (kind=16)		:: f
-	real(kind=16)			:: N_sum, N_EM, N_12
+	real(kind=16)			:: N_sum, N_EM, N_30
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 	N_sum=8*exp(75/max(s%re-1,0.5q0))/30  ! computational complexity of zeta_summation function -- counting the number of evaluations of k^{-s}
 	N_EM=abs(s)/2+20		    ! computational complexity of zeta_Euler_Maclaurin function			
-	N_12=sqrt(abs(s%im)/(2*pi_16))/2+122	! computational complexity of zeta_12 function
+	N_30=sqrt(abs(s%im)/(2*pi_16))/2+122	! computational complexity of zeta_30 function
 	if (abs(s%im)<200) then 
 		if (s%re<4) then
 			f=zeta_Euler_Maclaurin(s)
@@ -170,7 +176,7 @@
 		if (s%re<4) then
 			f=zeta_30(s)
 		else	
-			if (N_sum<N_12) then
+			if (N_sum<N_30) then
 				f=zeta_summation(s)
 			else
 				f=zeta_30(s)
@@ -181,7 +187,7 @@
 		if (s%re<4) then
 			f=conjg(zeta_30(conjg(s)))
 		else	
-			if (N_sum<N_12) then
+			if (N_sum<N_30) then
 				f=zeta_summation(s)
 			else
 				f=conjg(zeta_30(conjg(s)))
@@ -430,7 +436,7 @@ function RS_main_sum(s,N) result(f)
 ! Email: akuznets@yorku.ca
 !
 ! Created: 28-Nov-2025
-! Last updated: 28-Nov-2025
+! Last updated: 22-March-2025
 !
 ! License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 	
