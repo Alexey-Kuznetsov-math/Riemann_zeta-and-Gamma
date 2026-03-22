@@ -54,19 +54,23 @@ g[4]=np.pi**10/93555
 print('maximum error=',np.max(np.abs(f[:4]-g[:4])))
 
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('Test 5 : compute zeta(s) for s=-1,-3,-5,-7,-9')
+print('Test 5 : compute zeta(s) for s=0,-1,-3,-5,-7,-9')
 f=np.zeros(10,dtype=np.complex128)
+s=0
+f[0]=Riemann_zeta(s)
+print(f[0])
 for k in range(1,6):
     s=1-2*k
-    f[k-1]=Riemann_zeta(s)
-    print(f[k-1])
+    f[k]=Riemann_zeta(s)
+    print(f[k])
 g=np.zeros(10,dtype=np.complex128)
-g[0]=-1.0/12
-g[1]=1.0/120
-g[2]=-1.0/252
-g[3]=1.0/240
-g[4]=-1.0/132
-print('maximum error=',np.max(np.abs(f[:5]-g[:5])))
+g[0]=-1.0/2
+g[1]=-1.0/12
+g[2]=1.0/120
+g[3]=-1.0/252
+g[4]=1.0/240
+g[5]=-1.0/132
+print('maximum error=',np.max(np.abs(f[:6]-g[:6])))
 
 
 # the zeros of zeta(s) used in the next three tests
