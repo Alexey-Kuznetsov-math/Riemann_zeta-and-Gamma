@@ -11,7 +11,7 @@
 ! Email: akuznets@yorku.ca
 !
 ! Created: 28-Nov-2025
-! Last updated: 5-Dec-2025
+! Last updated: 22-March-2026
 !
 ! License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 !--------------------------------------------------------------------------	
@@ -23,6 +23,9 @@
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	if (s%re>=0.5q0) then
 		f=Riemann_zeta_half_plane(s)
+	elseif (abs(s)<1.0q-4) then ! use Taylor series if |s| is small
+		f=-0.5q0+s*(-0.91893853320467274178032973640561q0+s*(-1.0031782279542924256050500134q0&
+ 		+s*(-1.0007851944770424079602q0+s*(-0.99987929950057116q0+s*(-1.000001940896q0+s*(-1.0000013011q0-s))))))		
 	else ! use reflection formula for the Riemann zeta function for Re(s)<0.5
 		if (s%im>=0) then
 			f=i_16*(2*pi_16)**(s-1)*(1-exp(i_16*pi_16*s))*exp(-0.5q0*i_16*pi_16*s&
@@ -40,11 +43,11 @@
 	implicit none
 	complex (kind=16), intent(in)	:: s	
 	complex (kind=16)		:: f
-	real(kind=16)			:: N_sum, N_EM, N_12
+	real(kind=16)			:: N_sum, N_EM, N_30
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 	N_sum=8*exp(75/max(s%re-1,0.5q0))/30  ! computational complexity of zeta_summation function -- counting the number of evaluations of k^{-s}
 	N_EM=abs(s)/2+20		    ! computational complexity of zeta_Euler_Maclaurin function			
-	N_12=sqrt(abs(s%im)/(2*pi_16))/2+122	! computational complexity of zeta_12 function
+	N_30=sqrt(abs(s%im)/(2*pi_16))/2+122	! computational complexity of zeta_30 function
 	if (abs(s%im)<200) then 
 		if (s%re<4) then
 			f=zeta_Euler_Maclaurin(s)
@@ -59,7 +62,7 @@
 		if (s%re<4) then
 			f=zeta_30(s)
 		else	
-			if (N_sum<N_12) then
+			if (N_sum<N_30) then
 				f=zeta_summation(s)
 			else
 				f=zeta_30(s)
@@ -70,7 +73,7 @@
 		if (s%re<4) then
 			f=conjg(zeta_30(conjg(s)))
 		else	
-			if (N_sum<N_12) then
+			if (N_sum<N_30) then
 				f=zeta_summation(s)
 			else
 				f=conjg(zeta_30(conjg(s)))
