@@ -11,14 +11,13 @@
 ! Email: akuznets@yorku.ca
 !
 ! Created: 28-Nov-2025
-! Last updated: 28-Nov-2025
+! Last updated: 25-March-2025
 !
 ! License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 	
 	implicit none
 	complex(kind=16), intent(in)	:: z
 	complex(kind=16)		:: f, w
-	integer				:: k
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   real(kind=16), parameter	:: pi_16=3.141592653589793238462643383279502884q0
   complex(kind=16), parameter	:: i_16=(0.0q0,1.0q0) 
@@ -75,7 +74,7 @@
 		f=2*f+(z-0.5q0)*log(z)-z+1/(12*z)+0.5q0*log(2*pi_16)
 	elseif (z%re>0.5q0) then ! use the functional equation log(Gamma(z))=log(Gamma(z+1))-log(z)	
 		f=sum(c/(z+lambda)**3+conjg(c)/(z+conjg(lambda))**3+c_r/(z+lambda_r)**3)  
-		w=z+1;
+		w=z+1
 		f=(2*f+(w-0.5q0)*log(w)-w+1/(12*w)+0.5q0*log(2*pi_16))-log(z)
 	elseif (z%im>=0.0q0) then ! use reflection formula
 		w=2-z
