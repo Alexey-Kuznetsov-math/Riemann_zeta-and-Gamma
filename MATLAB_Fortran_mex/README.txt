@@ -46,6 +46,7 @@ than the built-in zeta(s):
 	67x faster in the range |Im(s)|<1000
 	312x faster in the range |Im(s)|<10 000
 	4279x faster in the range |Im(s)|<100 000
+  	10595x faster in the range |Im(s)|<1 000 000 
 
 Example output of test.m on a desktop machine
 (Lenovo ThinkCentre M90q Gen 3, Intel Core i5-12500, 16 GB RAM):
@@ -105,6 +106,18 @@ Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000
 
 the maximum relative error is:
    7.7253e-17
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Test (e): computing the maximum relative error Riemann_zeta_mex(s)/zeta(s)-1
+for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<1 000 000, -5<Re(s)<10:
+ 
+Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
+    0.4093
+ 
+Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
+   4.3365e+03
+
+the maximum relative error is:
+   7.9419e-17
 
 **********************************************************************************************************************
 References:
