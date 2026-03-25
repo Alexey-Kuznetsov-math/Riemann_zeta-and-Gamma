@@ -42,10 +42,10 @@ The program test.m compares the accuracy and performance of Riemann_zeta_mex(s) 
 A typical output is shown below. We see that Riemann_zeta_mex achieves full double-precision accuracy and is significantly faster
 than the built-in zeta(s):
 
-	58x faster in the range |Im(s)|<100
-	68x faster in the range |Im(s)|<1000
-	315x faster in the range |Im(s)|<10 000
-	3955x faster in the range |Im(s)|<100 000
+	57x faster in the range |Im(s)|<100
+	67x faster in the range |Im(s)|<1000
+	312x faster in the range |Im(s)|<10 000
+	4279x faster in the range |Im(s)|<100 000
 
 Example output of test.m on a desktop machine
 (Lenovo ThinkCentre M90q Gen 3, Intel Core i5-12500, 16 GB RAM):
@@ -53,57 +53,58 @@ Example output of test.m on a desktop machine
 >> test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_mex function against the MATLAB built-in function zeta(s)
- 
+
 Test (a): computing the relative error Riemann_zeta_mex(s)/zeta(s)-1
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<100, -5<Re(s)<10:
  
 Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
-   0.090132000000000
+    0.0949
 
 Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
-   5.253863000000000
+    5.3940
 
 the maximum relative error is:
-     2.294551376473652e-16
+   2.4689e-16
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Test (b): computing the maximum relative error Riemann_zeta_mex(s)/zeta(s)-1
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<1000, -5<Re(s)<10:
  
 Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
-   0.200024000000000
+    0.1994
  
 Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
-  13.493294000000001
+   13.4526
 
 the maximum relative error is:
-     2.247161154328318e-16
+   2.3887e-16
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Test (c): computing the maximum relative error Riemann_zeta_mex(s)/zeta(s)-1
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<10 000, -5<Re(s)<10:
  
 Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
-   0.229147000000000
+    0.2220
+
  
 Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
-  69.356413000000003
+   69.4338
 
 the maximum relative error is:
-     2.220462989698777e-16
+   7.0642e-17
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Test (d): computing the maximum relative error Riemann_zeta_mex(s)/zeta(s)-1
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<100 000, -5<Re(s)<10:
  
 Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
-   0.296897000000000
+    0.2641
  
 Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
-     1.174104960000000e+03
+   1.1295e+03
 
 the maximum relative error is:
-     7.695268066174558e-17
+   7.7253e-17
 
 **********************************************************************************************************************
 References:
