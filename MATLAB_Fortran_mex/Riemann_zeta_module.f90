@@ -4,7 +4,7 @@
 !Email: akuznets@yorku.ca
 !
 !Created: 1-Dec-2025
-!Last updated: 22-March-2026  
+!Last updated: 25-March-2026  
 !
 !License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 !#######################################################################
@@ -14,7 +14,7 @@ module Riemann_zeta_module
 	complex(kind=16), parameter  :: i_16=(0.0q0,1.0q0) 
 contains
 !#######################################################################
-		function Riemann_zeta(s) result(f)
+	function Riemann_zeta(s) result(f)
 !--------------------------------------------------------------------------	
 	implicit none
 	complex (kind=16), intent(in)	:: s	
@@ -46,7 +46,7 @@ contains
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 	N_sum=8*exp(45/max(s%re-1,0.5q0))/30  ! computational complexity of zeta_summation function -- counting the number of evaluations of k^{-s}
 	N_EM=abs(s)/2+10		    ! computational complexity of zeta_Euler_Maclaurin function			
-	N_12=sqrt(abs(s%im)/(2*pi_16))/2+50	! computational complexity of zeta_12 function
+	N_12=sqrt(abs(s%im)/(2*pi_16))/4+50	! computational complexity of zeta_12 function
 	if (abs(s%im)<150) then 
 		if (s%re<4) then
 			f=zeta_Euler_Maclaurin(s)
@@ -87,81 +87,87 @@ contains
 ! approximates the Riemann zeta function f=zeta(s)=\sum_{n=1}^{\infty} n^{-s} 	
 ! to have more efficient computation, we instead compute g(s)=((1-2^{-s})(1-3^{-s})(1-5^{-s})) zeta(s) 
 ! which is the Dirichlet series g(z)=\sum_{n>=1, gcd(n,30)=1} n^{-s} 
-! this trick removes about three-quarters of the terms from the original sum \sum_{n=1}^{\infty} n^{-s}
+! this trick removes 11/15 (or 73.3%) of the terms from the original sum \sum_{n=1}^{\infty} n^{-s}
 ! we truncate the Dirichlet series for g(z) at n=N*30
 ! for Re(s)>2 the error is smaller than (30*N)^(1-Re(s))
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 	implicit none
 	complex (kind=16), intent(in)	:: s
 	complex (kind=16)		:: f
-	integer, parameter 		:: k(1:8)=(/1, 7, 11, 13, 17, 19, 23, 29/) ! residue classes mod 30 that are co-prime to 30
+	integer, parameter 		:: res30(1:8)=(/1, 7, 11, 13, 17, 19, 23, 29/) ! residue classes mod 30 that are co-prime to 30
 	integer				:: N, j, l
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	N=floor(exp(45/(s%re-1))/30)  ! choose N so that the error is smaller than 10^{-19}
 	f=0
 	do j=1,8
 		do l=0,N
-			f=f+(k(j)+30*l)**(-s)
+			f=f+(res30(j)+30*l)**(-s)
 		end do
 	end do
 	f=f/((1-2**(-s))*(1-3**(-s))*(1-5**(-s)))
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	end function zeta_summation
-!#######################################################################
-	function RS_main_sum(s,N) result(f)
-! computes the two main sums in the Riemann-Siegel formula: f(1)=\sum_{n=1}^{N} n^{-s} and f(2)=\sum_{n=1}^{N} n^{s-1}
-! we remove almost 50% of terms from these sums by using the following result:
-! denote F(x)=\sum_{1<=n<=x} n^{-s} and G(x)=\sum_{1<=2n+1<=x} (2n+1)^{-s}
-! then F(x)=G(x)+2^{-s} G(x/2)+4^{-s} G(x/4)+8^{-s} G(x/8)+16^{-s} F(x/16)
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
-	complex (kind=16), intent(in)	:: s
-	integer, intent(in)		:: N
-	complex (kind=16)		:: f(1:2), g2(1:2), g4(1:2), g8(1:2), u
-	integer				:: k
+!#######################################################################	
+	function RS_main_sum(s,x) result(f)
+! This function computes f(1)=\sum_{1\le n \le x} n^{-s} and f(2)=\sum_{1\le n \le x} n^{s-1}.
+! We reduce the number of evaluations of the exponential function n^{-s} 
+! by using factorization n=m 2^a 3^b 5^c, where m is coprime to 30.
+! The algorithm evaluates n^{-s} only for n=2,3,5 and for integers m coprime to 30,
+! and generates all multiples of m by repeated multiplication by 2, 3, and 5.
+! The number of exponential function evaluations is decreased by 73.3%,
+! compared with the simple summation approach to compute f(1) and f(2). 
+! This optimization allows to compute zeta(s) faster when Im(s) is very large.
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   	implicit none
+   	integer, intent(in)		:: x
+   	complex(kind=16), intent(in)	:: s
+   	integer, parameter 		:: res30(1:8) = (/1, 7, 11, 13, 17, 19, 23, 29/)
+	integer 			:: b, r, m, n2, n3, n5, x2, x3, x5
+	complex(kind=16) 		:: u2, u3, u5, v2, v3, v5, t0, t2, t3, t5
+	complex(kind=16)		:: g0, g2, g3, g5, sum1, sum2, f(1:2)
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	u2=2**(-s); u3=3**(-s); u5=5**(-s)
+	v2=1/(2*u2); v3=1/(3*u3); v5=1/(5*u5)
+	x2=x/2; x3=x/3; x5=x/5
+	sum1=0.0q0
+	sum2=0.0q0
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	do b=0,((x-1)/30)
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        do r=1,8
+		m=30*b+res30(r)
+		if (m>x) exit
+		if (m==1) then
+			t0=1.0q0
+			g0=1.0q0
+		else
+			t0=m**(-s)
+			g0=1.0q0/(m*t0)
+		end if
+		n2=m; t2=t0; g2=g0
+		do
+			n3=n2; t3=t2; g3=g2
+			do
+				n5=n3; t5=t3; g5=g3
+                    do
+					sum1=sum1+t5
+					sum2=sum2+g5
+					if (n5>x5) exit
+					n5=5*n5; t5=t5*u5; g5=g5*v5
+ 				end do
+				if (n3>x3) exit
+				n3=3*n3; t3=t3*u3; g3=g3*v3 
+			end do
+			if (n2>x2) exit
+			n2=2*n2; t2=t2*u2; g2=g2*v2
+		end do
+	end do
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
-	if (N<16) then
-		f=1
-		do k=2,N
-			u=k**(-s)
-			f(1)=f(1)+u
-			f(2)=f(2)+1/(u*k)
-		end do
-	else
-		f=1
-		do k=2,(N/16)
-			u=k**(-s)
-			f(1)=f(1)+u
-			f(2)=f(2)+1/(u*k)
-		end do
-		g8=1
-		do k=1,((N/8)-1)/2
-			u=(2*k+1)**(-s)
-			g8(1)=g8(1)+u
-			g8(2)=g8(2)+1/(u*(2*k+1))
-		end do		
-		g4=g8
-		do k=((N/8)+1)/2,((N/4)-1)/2
-			u=(2*k+1)**(-s)
-			g4(1)=g4(1)+u
-			g4(2)=g4(2)+1/(u*(2*k+1))
-		end do
-		g2=g4
-		do k=((N/4)+1)/2,((N/2)-1)/2
-			u=(2*k+1)**(-s)
-			g2(1)=g2(1)+u
-			g2(2)=g2(2)+1/(u*(2*k+1))
-		end do
-		u=2**(-s)
-		f(1)=u**4*f(1)+u**3*g8(1)+u**2*g4(1)+(u+1)*g2(1)
-		u=1/(u*2)
-		f(2)=u**4*f(2)+u**3*g8(2)+u**2*g4(2)+(u+1)*g2(2)
-		do k=((N/2)+1)/2,(N-1)/2
-			u=(2*k+1)**(-s)
-			f(1)=f(1)+u
-			f(2)=f(2)+1/(u*(2*k+1))
-		end do
-	end if
-	end function RS_main_sum		
+	end do
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	f(1)=sum1
+	f(2)=sum2
+	end function RS_main_sum
 !#######################################################################
 	function zeta_Euler_Maclaurin(s) result(f)
 	implicit none
@@ -211,7 +217,7 @@ contains
 	f=1+N**(-s)*(f+0.5q0+N/(s-1))
 	do k=2,(N-1)
 		f=f+k**(-s)
-	end do
+	end do	
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 	end function zeta_Euler_Maclaurin
 !#######################################################################
@@ -221,9 +227,9 @@ contains
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  	
 	implicit none
 	complex (kind=16), intent(in)	:: s
-	complex (kind=16)		:: f, f1, f2, s1, chi, I1, I2, g(1:2)
-	real (kind=16)			:: M, u
-	integer				:: k, j, N	
+	complex (kind=16)		:: f, s1, chi, I1, I2, g(1:2)
+	real (kind=16)			:: M 
+	integer				:: N	
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    complex(kind=16), parameter	:: lambda(1:12)=&	
       (/(0.12666507030478299171328588879538q0,-0.10087636358615151558524566443202q0),&
@@ -275,7 +281,6 @@ contains
 	implicit none
 	complex(kind=16), intent(in)	:: z
 	complex(kind=16)		:: f, w
-	integer				:: k
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   complex(kind=16), parameter	:: c(1:10)=&  
   (/(-6.32899264378083954638419690213358305q-19,-5.02618515225831864524291125577114754q-19),&
@@ -335,7 +340,7 @@ contains
 			f=2*f+(z-0.5q0)*log(z)-z+1/(12*z)+0.5q0*log(2*pi_16)
 		elseif (z%re>0.5q0) then ! use the functional equation log(Gamma(z))=log(Gamma(z+1))-log(z)	
 			f=sum(c/(z+lambda)**3+conjg(c)/(z+conjg(lambda))**3+c_r/(z+lambda_r)**3)  
-			w=z+1;
+			w=z+1
 			f=(2*f+(w-0.5q0)*log(w)-w+1/(12*w)+0.5q0*log(2*pi_16))-log(z)
 		elseif (z%im>=0.0q0) then ! use reflection formula
 			w=2-z
