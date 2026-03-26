@@ -93,15 +93,15 @@ iii) direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}, truncated at an approp
 The function Riemann_zeta_mex achieves full double-precision accuracy and is significantly faster
 than the built-in MATLAB function zeta(s):
 
-	57× faster in the range |Im(s)| < 100
+ 57× faster in the range |Im(s)| < 100
   
-	67× faster in the range |Im(s)| < 1000
+ 67× faster in the range |Im(s)| < 1000
   
-	312× faster in the range |Im(s)| < 10 000
+ 312× faster in the range |Im(s)| < 10 000
 
-	4279× faster in the range |Im(s)| < 100 000
+ 4279× faster in the range |Im(s)| < 100 000
 
-	10595× faster in the range |Im(s)| < 1 000 000 
+ 10595× faster in the range |Im(s)| < 1 000 000 
 
 ********************************************************************************************************************** 
 
