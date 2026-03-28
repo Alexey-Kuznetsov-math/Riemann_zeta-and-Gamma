@@ -60,10 +60,11 @@
 	error=0.0q0
 	s=0.0q0	
 	f(1)=Riemann_zeta(s)
+	print *,f(1)
 	do k=1,5 
 		s=1-2*k
 		f(k+1)=Riemann_zeta(s)
-		print *,f(k)
+		print *,f(k+1)
 	end do
 	g(1)=-0.5q0
 	g(2)=-1.0q0/12
@@ -71,7 +72,7 @@
 	g(4)=-1.0q0/252
 	g(5)=1.0q0/240
 	g(6)=-1.0q0/132
-	print *,'maximum error=',maxval(abs(f(1:5)-g(1:5)))
+	print *,'maximum error=',maxval(abs(f(1:6)-g(1:6)))
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ! the zeros of zeta(s) used in the next three tests
 ! were downloaded from https://www-users.cse.umn.edu/~odlyzko/zeta_tables/index.html
