@@ -30,11 +30,12 @@ iii) direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}, truncated at an approp
 
 **********************************************************************************************************************
 
-Fortran90 function ln_gamma(z) computes the logarithm of the Gamma function in the entire complex plane to quadruple precision.
+Fortran90 function ln_gamma(z) computes the logarithm of the Gamma function in the entire complex plane to relative accuracy 10^{-33}.
 
 The input z must be a scalar of type complex(kind=16) (note that this function is not vectorized).
 
-This function is based on the approximation to log(Gamma(z)) developed in [2], with improved coefficients obtained in [3].
+The algorithm for ln_gamma is based on ideas developed in [2,3]. The main ingredient is Binet's formula and an approximation of
+the function f(x)=(exp(-x)/x)*(1/(exp(x)-1)+1/2-1/x) by an exponential sum with 30 terms (using techniques from [3]). 
 
 **********************************************************************************************************************   
 
