@@ -4,7 +4,7 @@ Website: https://kuznetsovmath.ca/
 Email: akuznets@yorku.ca
 
 Created: 18-Nov-2025
-Last updated: 22-March-2026
+Last updated: 2-April-2026
 
 License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 **********************************************************************************************************************
@@ -31,7 +31,8 @@ The computational complexity is O(sqrt(|Im(s)|)) in the strip -4 < Re(s) < 5, an
     f = ln_gamma(z) returns log(Gamma(z)) for any complex input z.
     The input z can be a scalar, a vector, or an array.
 
-This algorithm was developed in [2,3]. 
+The algorithm for ln_gamma is based on ideas developed in [2,3]. The main ingredient is Binet's formula and an approximation of
+the function f(x)=(exp(-x)/x)*(1/(exp(x)-1)+1/2-1/x) by an exponential sum with 12 terms (using techniques from [3]).  
 **********************************************************************************************************************
 
 The fourth test in the program `test.m` compares the accuracy and performance of `Riemann_zeta(s)` with the 
