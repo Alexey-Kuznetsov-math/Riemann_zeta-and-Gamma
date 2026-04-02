@@ -4,7 +4,7 @@ Website: https://kuznetsovmath.ca/
 Email: akuznets@yorku.ca
 
 Created: 28-Nov-2025
-Last updated: 25-March-2026
+Last updated: 2-April-2026
 
 License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 **********************************************************************************************************************
@@ -33,7 +33,8 @@ The function ln_gamma(z) computes the logarithm of the Gamma function in the ent
 
 The input z must be a scalar of type complex(kind=16) (note that this function is not vectorized).
 
-This function is based on the approximation to log(Gamma(z)) developed in [2], with improved coefficients obtained in [3].
+The algorithm for ln_gamma is based on ideas developed in [2,3]. The main ingredient is Binet's formula and an approximation of
+the function f(x)=(exp(-x)/x)*(1/(exp(x)-1)+1/2-1/x) by an exponential sum with 30 terms (using techniques from [3]). 
 **********************************************************************************************************************
 
 To compile and run the test.f90 program on Linux with the gfortran compiler, use the following command:
