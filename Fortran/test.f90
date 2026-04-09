@@ -159,7 +159,7 @@
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 	N_sum=8*exp(75/max(s%re-1,0.5q0))/30  ! computational complexity of zeta_summation function -- counting the number of evaluations of k^{-s}
 	N_EM=abs(s)/4+5			      ! computational complexity of zeta_Euler_Maclaurin function			
-	N_30=sqrt(abs(s%im)/(2*pi_16))/4+122  ! computational complexity of zeta_30 function
+	N_30=sqrt(abs(s%im)/6.2832q0)/4+122  ! computational complexity of zeta_30 function
 	if (abs(s%im)<400) then 
 		if (N_sum<N_EM) then
 			f=zeta_summation(s)
