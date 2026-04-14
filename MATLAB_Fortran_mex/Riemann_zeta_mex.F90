@@ -1,98 +1,76 @@
 #include "fintrf.h"
 
-subroutine mexFunction(nlhs, plhs, nrhs, prhs)
-  use Riemann_zeta_module          
-  implicit none
+!-----------------------------------------------------------------------
+! f = Riemann_zeta_mex(s)
+!
+! MEX gateway for the Riemann zeta function.
+! Input s can be a scalar or array (real or complex, double precision).
+! Output f is complex double with the same shape as s.
+!-----------------------------------------------------------------------
+      subroutine mexFunction(nlhs, plhs, nrhs, prhs)
+      use Riemann_zeta_module
+      implicit none
 
-  integer*4 nlhs, nrhs
-  mwPointer plhs(*), prhs(*)
+!     MEX interface
+      mwPointer :: plhs(*), prhs(*)
+      integer   :: nlhs, nrhs
 
-  ! Fortran interface to MEX API functions
-  integer*4 mxIsComplex, mxIsDouble
-  mwPointer mxGetPr, mxGetPi, mxCreateDoubleMatrix
-  mwSize    mxGetNumberOfElements, mxGetM, mxGetN
+!     MEX API functions
+      mwPointer :: mxGetPr, mxGetPi, mxCreateDoubleMatrix
+      mwSize    :: mxGetM, mxGetN
+      integer   :: mxIsComplex
 
-  ! MATLAB array handles and sizes
-  mwPointer :: s_in_mx, f_out_mx
-  mwPointer :: pr_re, pr_im, po_re, po_im
-  mwSize   :: n_el, mrows, ncols
+!     Local variables
+      mwPointer :: pr_in, pi_in, pr_out, pi_out
+      mwSize    :: m, n, numel
+      integer, parameter :: qp_local = selected_real_kind(33, 4931)
+      real(8), allocatable :: sr(:), si(:), fr(:), fi(:)
+      complex(kind=qp_local) :: s_qp, f_qp
+      integer :: k
 
-  ! Work arrays
-  double precision, allocatable :: s_re(:), s_im(:), f_re(:), f_im(:)
-  integer :: i
-  complex(kind=16) :: s16, f16
-  logical :: is_complex
+!     Check arguments
+      if (nrhs /= 1) then
+          call mexErrMsgTxt('Riemann_zeta_mex requires one input.')
+      end if
+      if (nlhs > 1) then
+          call mexErrMsgTxt('Riemann_zeta_mex returns one output.')
+      end if
 
-  !------------------------------------------------------------
-  ! Check number of inputs/outputs
-  !------------------------------------------------------------
-  if (nrhs .ne. 1) then
-     call mexErrMsgTxt('One input (s) required.')
-  end if
-  if (nlhs .ne. 1) then
-     call mexErrMsgTxt('One output (z) required.')
-  end if
+!     Get input dimensions
+      m = mxGetM(prhs(1))
+      n = mxGetN(prhs(1))
+      numel = m * n
 
-  s_in_mx = prhs(1)
+!     Allocate work arrays
+      allocate(sr(numel), si(numel), fr(numel), fi(numel))
 
-  !------------------------------------------------------------
-  ! We accept double input (real or complex)
-  !------------------------------------------------------------
-  if (mxIsDouble(s_in_mx) .eq. 0) then
-     call mexErrMsgTxt('Input must be double (real or complex).')
-  end if
+!     Copy input real part
+      pr_in = mxGetPr(prhs(1))
+      call mxCopyPtrToReal8(pr_in, sr, numel)
 
-  is_complex = (mxIsComplex(s_in_mx) .ne. 0)
+!     Copy input imaginary part (or set to zero if real)
+      if (mxIsComplex(prhs(1)) == 1) then
+          pi_in = mxGetPi(prhs(1))
+          call mxCopyPtrToReal8(pi_in, si, numel)
+      else
+          si = 0.0d0
+      end if
 
-  !------------------------------------------------------------
-  ! Get sizes and data pointers
-  !------------------------------------------------------------
-  n_el  = mxGetNumberOfElements(s_in_mx)
-  mrows = mxGetM(s_in_mx)
-  ncols = mxGetN(s_in_mx)
+!     Evaluate zeta(s) for each element
+      do k = 1, numel
+          s_qp = cmplx(sr(k), si(k), kind=qp_local)
+          f_qp = Riemann_zeta(s_qp)
+          fr(k) = real(real(f_qp), kind=8)
+          fi(k) = real(aimag(f_qp), kind=8)
+      end do
 
-  pr_re = mxGetPr(s_in_mx)
-  if (is_complex) then
-     pr_im = mxGetPi(s_in_mx)
-  else
-     pr_im = 0
-  end if
+!     Create complex output matrix and copy results
+      plhs(1) = mxCreateDoubleMatrix(m, n, 1)
+      pr_out = mxGetPr(plhs(1))
+      pi_out = mxGetPi(plhs(1))
+      call mxCopyReal8ToPtr(fr, pr_out, numel)
+      call mxCopyReal8ToPtr(fi, pi_out, numel)
 
-  allocate(s_re(n_el), s_im(n_el), f_re(n_el), f_im(n_el))
-
-  ! Copy real part
-  call mxCopyPtrToReal8(pr_re, s_re, n_el)
-
-  ! Copy imag part if complex; otherwise set to zero
-  if (is_complex) then
-     call mxCopyPtrToReal8(pr_im, s_im, n_el)
-  else
-     s_im = 0.0d0
-  end if
-
-  !------------------------------------------------------------
-  ! Create complex output array
-  !------------------------------------------------------------
-  f_out_mx = mxCreateDoubleMatrix(mrows, ncols, .true.)  ! .true. => complex
-  po_re    = mxGetPr(f_out_mx)
-  po_im    = mxGetPi(f_out_mx)
-
-  !------------------------------------------------------------
-  ! Main loop: call Riemann_zeta in quad precision
-  !------------------------------------------------------------
-  do i = 1, n_el
-     s16 = cmplx( real(s_re(i),kind=16), real(s_im(i),kind=16), kind=16 )
-     f16 = Riemann_zeta(s16)
-     f_re(i) = real(f16, kind=8)
-     f_im(i) = aimag(f16)
-  end do
-
-  ! Copy results back to MATLAB
-  call mxCopyReal8ToPtr(f_re, po_re, n_el)
-  call mxCopyReal8ToPtr(f_im, po_im, n_el)
-
-  plhs(1) = f_out_mx
-
-  deallocate(s_re, s_im, f_re, f_im)
-
-end subroutine mexFunction
+      deallocate(sr, si, fr, fi)
+      return
+      end subroutine mexFunction
