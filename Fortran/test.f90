@@ -83,7 +83,7 @@
     do k=1,5 
         s=1-2*k
         f(k+1)=Riemann_zeta(s)
-        print *,f(k)
+        print *,f(k+1)
     end do
     g(1)=-0.5_qp
     g(2)=-1.0_qp/12
