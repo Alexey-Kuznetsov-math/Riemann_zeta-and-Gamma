@@ -66,11 +66,11 @@ Precision of Riemann_zeta:
 While less accurate than MATLAB's built-in zeta(s), this
 implementation is significantly faster due to full vectorization:
 
-  |Im(s)| < 100        567x faster than built-in zeta(s)
+  |Im(s)| < 100       -- 567x faster than built-in zeta(s)
   
-  |Im(s)| < 1,000    1,100x faster than built-in zeta(s)
+  |Im(s)| < 1,000     -- 1,100x faster than built-in zeta(s)
   
-  |Im(s)| < 10,000  12,256x faster than built-in zeta(s)
+  |Im(s)| < 10,000    -- 12,256x faster than built-in zeta(s)
 
 MATLAB_Fortran_mex
 =======================================
@@ -89,13 +89,13 @@ Accuracy: full double precision for |Im(s)| < 10^12.
 
 Speedup vs. MATLAB built-in zeta(s):
 
-  |Im(s)| < 100          79x
+  |Im(s)| < 100        --  79x
   
-  |Im(s)| < 1,000        99x
+  |Im(s)| < 1,000      --  99x
   
-  |Im(s)| < 10,000      463x
+  |Im(s)| < 10,000     -- 463x
   
-  |Im(s)| < 100,000   5,728x
+  |Im(s)| < 100,000    -- 5,728x
 
 Python
 =======================================
