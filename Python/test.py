@@ -76,7 +76,7 @@ print('maximum error=',np.max(np.abs(f[:6]-g[:6])))
 # the zeros of zeta(s) used in the next three tests
 # were downloaded from https://www-users.cse.umn.edu/~odlyzko/zeta_tables/index.html
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('Test 5 : compute zeta(1/2+i*t_k) for the first five non-trivial zeros 1/2+i*t_k of zeta(s)')
+print('Test 6 : compute zeta(1/2+i*t_k) for the first five non-trivial zeros 1/2+i*t_k of zeta(s)')
 t=np.zeros(5,dtype=np.float64)
 t[0]=14.13472514173469379045725198356247027
 t[1]=21.02203963877155499262847959389690277
@@ -88,7 +88,7 @@ for k in range(5):
     print(Riemann_zeta(s))
 
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('Test 6 : compute zeta(1/2+i*t_k) for the first five non-trivial zeros 1/2+i*t_k of zeta(s) at height t=200')
+print('Test 7 : compute zeta(1/2+i*t_k) for the first five non-trivial zeros 1/2+i*t_k of zeta(s) at height t=200')
 t[0]=201.2647519437037887330161334275481732
 t[1]=202.4935945141405342776866606378643158
 t[2]=204.1896718031045543307164383863136851
@@ -99,7 +99,7 @@ for k in range(5):
     print(Riemann_zeta(s))
 
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('Test 7 : compute zeta(1/2+i*t_k) for the first five non-trivial zeros 1/2+i*t_k of zeta(s) at height t=10^6')
+print('Test 8 : compute zeta(1/2+i*t_k) for the first five non-trivial zeros 1/2+i*t_k of zeta(s) at height t=10^6')
 print('note that these zeros are only correct to 10^{-9}, so the values of zeta(1/2+i*t_k) should be of the same order of magnitude')
 t[0]=1000000.584097696
 t[1]=1000000.828343490
@@ -111,7 +111,7 @@ for k in range(5):
     print(Riemann_zeta(s))     
 
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('Test 8 : plot the Riemann-Siegel function Z(t) for 0<t<100, 1000<t<1100 and 10000<t<10100')
+print('Test 9 : plot the Riemann-Siegel function Z(t) for 0<t<100, 1000<t<1100 and 10000<t<10100')
 t=np.linspace(0,100,10000)
 g=ln_gamma(0.25+0.5j*t)
 f0=Riemann_zeta(0.5+1j*t)*np.exp(1j*g.imag-0.5j*t*np.log(np.pi))
