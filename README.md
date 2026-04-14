@@ -27,8 +27,11 @@ inputs must be scalars of type complex(kind=qp), where
 qp = selected_real_kind(33, 4931).
 
   Riemann_zeta(s)        -- Riemann zeta function zeta(s)
+  
   Riemann_zeta_prime(s)  -- returns array [zeta(s), zeta'(s)]
+  
   ln_gamma(z)            -- log(Gamma(z)), relative accuracy 10^{-33}
+  
   psi(z)                 -- digamma function psi(z)=Gamma'(z)/Gamma(z),
                             relative accuracy 10^{-32}
 
