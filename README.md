@@ -18,9 +18,9 @@ Five packages are included:
   Python_Fortran/      -- Python + Fortran, full double precision,
                           vectorized, requires build step
 
-======================================================================
-Fortran/
-======================================================================
+=======================================
+Fortran
+=======================================
 
 The module gamma_zeta_module.f90 provides four public functions. All
 inputs must be scalars of type complex(kind=qp), where
