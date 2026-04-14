@@ -1,5 +1,5 @@
 import numpy as np
-from pyzeta import Riemann_zeta
+from Riemann_zeta_python import Riemann_zeta, Riemann_zeta_prime
 from ln_gamma import ln_gamma
 import matplotlib.pyplot as plt
 
@@ -101,9 +101,29 @@ zeta_exact[8]=0.315056654699321886152+0.561446548967376614715j
 zeta_exact[9]=14.31909665138080782830+17.85833478123989396854j
 print(Riemann_zeta(s)-zeta_exact)
 
+print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+print("Test 7: computing the first non-trivial zero with Newton's method")
+s = 0.5 + 14.1j # initial approximation
+for i in range(5):
+    f, f1 = Riemann_zeta_prime(s)
+    s = s - f / f1
+    print(f'  s = {s}')
+s1 = 0.5 + 14.13472514173469379j    
+print(f'  error = {s - s1}')
+
+print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+print("Test 8: computing the non-trivial zero close to 1/2+401.8i with Newton's method")
+s = 0.5 + 401.8j # initial approximation
+for i in range(5):
+    f, f1 = Riemann_zeta_prime(s)
+    s = s - f / f1
+    print(f'  s = {s}')
+s1 = 0.5 + 401.8392286005332165399113j    
+print(f'  error = {s - s1}')
+
 
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('Test 7 : plot the Riemann-Siegel function Z(t) for 0<t<100, 1000<t<1100 and 10000<t<10100')
+print('Test 9 : plot the Riemann-Siegel function Z(t) for 0<t<100, 1000<t<1100 and 10000<t<10100')
 t=np.linspace(0,100,10000)
 g=ln_gamma(0.25+0.5j*t)
 f0=Riemann_zeta(0.5+1j*t)*np.exp(1j*g.imag-0.5j*t*np.log(np.pi))
