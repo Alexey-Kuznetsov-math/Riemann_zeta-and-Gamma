@@ -220,7 +220,7 @@ module gamma_zeta_module
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
     implicit none
     complex (kind=qp), intent(in)   :: s
-    complex (kind=qp)               :: f, s1, chi, I1, I2, g(1:2)
+    complex (kind=qp)               :: f, s1, w, chi, I1, I2, g(1:2), l1(1:30), l2(1:30)
     real (kind=qp)                  :: M
     integer                         :: N    
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -297,11 +297,12 @@ module gamma_zeta_module
     g=RS_main_sum(s,N)  ! compute the main sums in the Riemann-Siegel formula
     !compute I1=I_{M,30}(s) and  I2=conjg(I_{M,30}(1-conjg(s)))
     M=N+0.5_qp  
-    I1=exp(-s*log(M))*(omega0+sum(omega*(exp(-2*pi_qp*M*lambda-s*log(1+i_qp*lambda/M))&
-        +exp(2*pi_qp*M*lambda-s*log(1-i_qp*lambda/M)))))
+    l1=log(1+i_qp*lambda/M)
+    l2=log(1-i_qp*lambda/M)  
+    w=M**(-s)
+    I1=(omega0+sum(omega*(exp(-2*pi_qp*M*lambda-s*l1)+exp(2*pi_qp*M*lambda-s*l2))))*w
     s1=1-conjg(s)   
-    I2=conjg(exp(-s1*log(M))*(omega0+sum(omega*(exp(-2*pi_qp*M*lambda-s1*log(1+i_qp*lambda/M))&
-        +exp(2*pi_qp*M*lambda-s1*log(1-i_qp*lambda/M))))))
+    I2=conjg(omega0+sum(omega*(exp(-2*pi_qp*M*lambda-s1*l1)+exp(2*pi_qp*M*lambda-s1*l2))))/(M*w)
     f=g(1)+chi*g(2)-0.5_qp*(-1)**N*(I1+chi*I2)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~     
     end function zeta_30
