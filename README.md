@@ -45,9 +45,8 @@ Build and run (requires gfortran):
 
   make && make run
 
-======================================================================
-MATLAB/
-======================================================================
+MATLAB
+=======================================
 
 Two MATLAB functions:
 
@@ -71,9 +70,8 @@ Run tests:
 
   >> test
 
-======================================================================
-MATLAB_Fortran_mex/
-======================================================================
+MATLAB_Fortran_mex
+=======================================
 
 Two MATLAB functions backed by a quadruple-precision Fortran core,
 accessed via MEX. All computations are performed internally in
@@ -102,9 +100,8 @@ Run tests:
 
   >> test
 
-======================================================================
-Python/
-======================================================================
+Python
+=======================================
 
 Two  Python/NumPy functions:
 
@@ -124,9 +121,9 @@ Run tests:
 
   python3 test.py
 
-======================================================================
-Python_Fortran/
-======================================================================
+
+Python_Fortran
+=======================================
 
 Python functions backed by a quadruple-precision Fortran core,
 accessed via f2py. All computations are performed internally in
@@ -150,9 +147,9 @@ Run tests:
 
   python3 test.py
 
-======================================================================
+
 REFERENCES
-======================================================================
+=======================================
 
 [1] A. Kuznetsov, "Simple and accurate approximations to the Riemann
     zeta function", 2025, https://arxiv.org/abs/2503.09519
