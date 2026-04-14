@@ -38,7 +38,9 @@ qp = selected_real_kind(33, 4931).
 Precision of Riemann_zeta:
 
   |Im(s)| < 100      -- approximately 31 correct decimal digits
+  
   |Im(s)| < 1,000    -- approximately 30 correct decimal digits
+  
   |Im(s)| < 10,000   -- approximately 29 correct decimal digits
 
 Accuracy decreases by approximately one digit per increase in
@@ -50,19 +52,24 @@ MATLAB
 Two MATLAB functions:
 
   Riemann_zeta(s)  -- zeta(s) for scalar, vector, or array input
+  
   ln_gamma(z)      -- log(Gamma(z)) for scalar, vector, or array input
 
 Precision of Riemann_zeta:
 
   |Im(s)| < 100      -- approximately 13 correct decimal digits
+  
   |Im(s)| < 1,000    -- approximately 12 correct decimal digits
+  
   |Im(s)| < 10,000   -- approximately 11 correct decimal digits
 
 While less accurate than MATLAB's built-in zeta(s), this
 implementation is significantly faster due to full vectorization:
 
   |Im(s)| < 100        567x faster than built-in zeta(s)
+  
   |Im(s)| < 1,000    1,100x faster than built-in zeta(s)
+  
   |Im(s)| < 10,000  12,256x faster than built-in zeta(s)
 
 MATLAB_Fortran_mex
@@ -74,6 +81,7 @@ quadruple precision; results are returned as standard double-precision
 complex values.
 
   Riemann_zeta_mex(s)        -- zeta(s) for scalar or array input
+  
   Riemann_zeta_prime_mex(s)  -- returns [zeta(s), zeta'(s)]
                                 for scalar or array input
 
@@ -82,8 +90,11 @@ Accuracy: full double precision for |Im(s)| < 10^12.
 Speedup vs. MATLAB built-in zeta(s):
 
   |Im(s)| < 100          79x
+  
   |Im(s)| < 1,000        99x
+  
   |Im(s)| < 10,000      463x
+  
   |Im(s)| < 100,000   5,728x
 
 Python
@@ -92,12 +103,15 @@ Python
 Two  Python/NumPy functions:
 
   Riemann_zeta(s)  -- zeta(s) for scalar, list, or NumPy array input
+  
   ln_gamma(z)      -- log(Gamma(z)) for scalar, list, or NumPy array
 
 Precision of Riemann_zeta:
 
   |Im(s)| < 100      -- approximately 13 correct decimal digits
+  
   |Im(s)| < 1,000    -- approximately 12 correct decimal digits
+  
   |Im(s)| < 10,000   -- approximately 11 correct decimal digits
 
 Requirements: Python 3.8 or later, NumPy. matplotlib is required
@@ -113,8 +127,10 @@ quadruple precision; results are returned as standard double-precision
 complex NumPy arrays.
 
   Riemann_zeta(s)        -- zeta(s) for scalar or NumPy array input
+  
   Riemann_zeta_prime(s)  -- returns (zeta(s), zeta'(s))
                             for scalar or NumPy array input
+                            
   ln_gamma(z)            -- log(Gamma(z)) for scalar or NumPy array
 
 Accuracy: full double precision for |Im(s)| < 10^12.
