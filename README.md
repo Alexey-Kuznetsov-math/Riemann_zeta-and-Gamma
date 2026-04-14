@@ -41,10 +41,6 @@ Precision of Riemann_zeta:
 Accuracy decreases by approximately one digit per increase in
 |Im(s)| by a factor of ten. See Section 1 of [1] for details.
 
-Build and run (requires gfortran):
-
-  make && make run
-
 MATLAB
 =======================================
 
@@ -65,10 +61,6 @@ implementation is significantly faster due to full vectorization:
   |Im(s)| < 100        567x faster than built-in zeta(s)
   |Im(s)| < 1,000    1,100x faster than built-in zeta(s)
   |Im(s)| < 10,000  12,256x faster than built-in zeta(s)
-
-Run tests:
-
-  >> test
 
 MATLAB_Fortran_mex
 =======================================
@@ -91,15 +83,6 @@ Speedup vs. MATLAB built-in zeta(s):
   |Im(s)| < 10,000      463x
   |Im(s)| < 100,000   5,728x
 
-Build (requires gfortran and MATLAB R2017b or later):
-
-  >> mex -setup Fortran    % one-time setup
-  >> build_mex
-
-Run tests:
-
-  >> test
-
 Python
 =======================================
 
@@ -116,10 +99,6 @@ Precision of Riemann_zeta:
 
 Requirements: Python 3.8 or later, NumPy. matplotlib is required
 only for the plotting test in test.py.
-
-Run tests:
-
-  python3 test.py
 
 
 Python_Fortran
@@ -138,14 +117,6 @@ complex NumPy arrays.
 Accuracy: full double precision for |Im(s)| < 10^12.
 
 Requirements: Python 3.8 or later, NumPy (provides f2py), gfortran.
-
-Build (one-time setup):
-
-  chmod +x build.sh && ./build.sh
-
-Run tests:
-
-  python3 test.py
 
 
 REFERENCES
