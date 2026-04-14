@@ -72,13 +72,14 @@
     g(3)=pi_qp**6/945
     g(4)=pi_qp**8/9450
     g(5)=pi_qp**10/93555    
-    print *,'maximum error=',maxval(abs(f(1:4)-g(1:4))) 
+    print *,'maximum error=',maxval(abs(f(1:5)-g(1:5))) 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     print *, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     print *, 'Test 7 : compute zeta(s) for s=0,-1,-3,-5,-7,-9'
     error=0.0_qp
     s=0.0_qp    
     f(1)=Riemann_zeta(s)
+    print *,f(1)
     do k=1,5 
         s=1-2*k
         f(k+1)=Riemann_zeta(s)
@@ -90,7 +91,7 @@
     g(4)=-1.0_qp/252
     g(5)=1.0_qp/240
     g(6)=-1.0_qp/132
-    print *,'maximum error=',maxval(abs(f(1:5)-g(1:5)))
+    print *,'maximum error=',maxval(abs(f(1:6)-g(1:6)))
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ! the zeros of zeta(s) used in the next three tests
 ! were downloaded from https://www-users.cse.umn.edu/~odlyzko/zeta_tables/index.html
