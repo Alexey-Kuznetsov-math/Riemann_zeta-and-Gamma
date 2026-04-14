@@ -35,7 +35,7 @@ qp = selected_real_kind(33, 4931).
   psi(z)                 -- digamma function psi(z)=Gamma'(z)/Gamma(z),
                             relative accuracy 10^{-32}
 
-Precision of Riemann_zeta:
+Precision of Riemann_zeta and Riemann_zeta_prime:
 
   |Im(s)| < 100      -- approximately 31 correct decimal digits
   
