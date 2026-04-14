@@ -1,119 +1,166 @@
 # Riemann_zeta-and-Gamma
-Fortran, MATLAB, and Python code for computing the Riemann zeta and log Gamma functions for complex values of the variable. 
 
-**********************************************************************************************************************
+This repository provides Fortran, MATLAB, and Python implementations
+for computing the Riemann zeta function zeta(s), its derivative zeta'(s), and the logarithm of
+the Gamma function log(Gamma(z)) for complex values of the variable.
 
-Fortran90 function Riemann_zeta(s) computes the Riemann zeta function for complex values of s.
+Five packages are included:
 
-The input s must be a scalar of type complex(kind=16) (note that this function is not vectorized).
-
-The precision is close to quadruple:
-
-  For |Im(s)| < 100   the approximation is correct to about 31 decimal digits;
-	
-  For |Im(s)| < 1000  the approximation is correct to about 30 decimal digits;
-	
-  For |Im(s)| < 10000 the approximation is correct to about 29 decimal digits.
-
-For larger values of |Im(s)|, the accuracy continues to decrease in a similar way: with every increase of |Im(s)|
-by a factor of ten, we lose approximately one decimal digit of precision.
-More details on this loss of precision for large values of |Im(s)| can be found in [1] (see the list of references below).
-
-The computational complexity is O(sqrt(|Im(s)|)) in the critical strip. In other regions of the complex plane it is either O(sqrt(|Im(s)|))  
-(if we are close to the critical strip) or O(1). Depending on the value of s, we use one of the following methods to compute zeta(s):
-
-i) an approximation zeta_30(s) developed in [1],
-	
-ii) Euler-Maclaurin summation formula, or
-	
-iii) direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}, truncated at an appropriate N
-
-**********************************************************************************************************************
-
-Fortran90 function ln_gamma(z) computes the logarithm of the Gamma function in the entire complex plane to relative accuracy 10^{-33}.
-
-The input z must be a scalar of type complex(kind=16) (note that this function is not vectorized).
-
-The algorithm for ln_gamma is based on ideas developed in [2,3]. The main ingredient is Binet's formula and an approximation of
-the function f(x)=(exp(-x)/x)*(1/(exp(x)-1)+1/2-1/x) by an exponential sum with 30 terms (using techniques from [3]). 
-
-**********************************************************************************************************************   
-
-MATLAB and Python function Riemann_zeta(s) returns an approximation to zeta(s) for complex input s.
-The input s can be a scalar or vector.
-
-For |Im(s)|<100   the approximation is correct to around 13 decimal digits;
+  Fortran/             -- Fortran 90, ~30-31 digits, scalar only
   
-For |Im(s)|<1000  the approximation is correct to around 12 decimal digits;
+  MATLAB/              -- MATLAB, ~13 digits, vectorized
   
-For |Im(s)|<10000 the approximation is correct to around 11 decimal digits.
+  MATLAB_Fortran_mex/  -- MATLAB + Fortran, full double precision,
+                          vectorized, requires build step
+                          
+  Python/              -- Python/NumPy, ~13 digits, vectorized
   
-For larger values of |Im(s)| the accuracy will continue to decrease in a similar way: 
-with every increase of Im(s) by a factor of ten we lose approximately one decimal digit of precision. 
-More details can be found at the end of Section 1 in [1].
+  Python_Fortran/      -- Python + Fortran, full double precision,
+                          vectorized, requires build step
 
-When |Im(s)|>200 and -4<Re(s)<5 we use the approximation zeta_8(s) developed in [1]. 
-For other values of s we use either Euler-Maclaurin formula or direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}.
-The computational complexity is O(sqrt(|Im(s)|)) in the strip -4 < Re(s) < 5, and O(1) everywhere else in the complex plane.
+======================================================================
+Fortran/
+======================================================================
 
-The function Riemann_zeta(s), while not as accurate as the built-in MATLAB function zeta(s), is significantly faster than the built-in zeta(s):
+The module gamma_zeta_module.f90 provides four public functions. All
+inputs must be scalars of type complex(kind=qp), where
+qp = selected_real_kind(33, 4931).
 
-567× faster in the range |Im(s)| < 100
-  
-1100× faster in the range |Im(s)| < 1000
-  
-12256× faster in the range |Im(s)| < 10 000
+  Riemann_zeta(s)        -- Riemann zeta function zeta(s)
+  Riemann_zeta_prime(s)  -- returns array [zeta(s), zeta'(s)]
+  ln_gamma(z)            -- log(Gamma(z)), relative accuracy 10^{-33}
+  psi(z)                 -- digamma function psi(z)=Gamma'(z)/Gamma(z),
+                            relative accuracy 10^{-32}
 
-**********************************************************************************************************************  
+Precision of Riemann_zeta:
 
-MATLAB and Python function ln_gamma(z) computes the logarithm of the Gamma function in the entire complex plane to double precision.
-The input z can be a scalar, vector, or array. 
+  |Im(s)| < 100      -- approximately 31 correct decimal digits
+  |Im(s)| < 1,000    -- approximately 30 correct decimal digits
+  |Im(s)| < 10,000   -- approximately 29 correct decimal digits
 
-********************************************************************************************************************** 
-MATLAB_Fortran_mex: The Fortran90 function Riemann_zeta(s) computes the Riemann zeta function for complex scalar values of s (complex(kind=16)). 
-The output of this function is also complex(kind=16) and the accuracy is at least 17 decimal digits for |Im(s)|<10^12. 
+Accuracy decreases by approximately one digit per increase in
+|Im(s)| by a factor of ten. See Section 1 of [1] for details.
 
-This Fortran function uses the approximation zeta_12(s) derived in [1], as well as the quadruple precision log(Gamma(s)) 
-implementation derived in [2,3] (see the references below).
+Build and run (requires gfortran):
 
-The MEX file provides an interface layer between MATLAB and the Fortran 90 implementation of the Riemann zeta function.
-The routine mexFunction receives MATLAB inputs as mxArray pointers, extracts the real and (optionally) imaginary
-parts as double-precision arrays, promotes them to complex(kind=16), and calls the Fortran routine Riemann_zeta for each element.
-The results are then converted back to double-precision complex values and stored in a new mxArray, which is returned to MATLAB
-as a standard MATLAB variable.
+  make && make run
 
-The computational complexity is O(sqrt(|Im(s)|)) in the critical strip. In other regions of the complex plane it is either O(sqrt(|Im(s)|))  
-(if we are close to the critical strip) or O(1). Depending on the value of s, we use one of the following methods to compute zeta(s):
+======================================================================
+MATLAB/
+======================================================================
 
-i) an approximation zeta_12(s) developed in [1],
-	
-ii) Euler-Maclaurin summation formula, or
-	
-iii) direct summation zeta(s)=\sum_{n=1}^{\infty} n^{-s}, truncated at an appropriate N
+Two MATLAB functions:
 
-The function Riemann_zeta_mex achieves full double-precision accuracy and is significantly faster
-than the built-in MATLAB function zeta(s):
+  Riemann_zeta(s)  -- zeta(s) for scalar, vector, or array input
+  ln_gamma(z)      -- log(Gamma(z)) for scalar, vector, or array input
 
- 57× faster in the range |Im(s)| < 100
-  
- 67× faster in the range |Im(s)| < 1000
-  
- 312× faster in the range |Im(s)| < 10 000
+Precision of Riemann_zeta:
 
- 4279× faster in the range |Im(s)| < 100 000
+  |Im(s)| < 100      -- approximately 13 correct decimal digits
+  |Im(s)| < 1,000    -- approximately 12 correct decimal digits
+  |Im(s)| < 10,000   -- approximately 11 correct decimal digits
 
- 10595× faster in the range |Im(s)| < 1 000 000 
+While less accurate than MATLAB's built-in zeta(s), this
+implementation is significantly faster due to full vectorization:
 
-********************************************************************************************************************** 
+  |Im(s)| < 100        567x faster than built-in zeta(s)
+  |Im(s)| < 1,000    1,100x faster than built-in zeta(s)
+  |Im(s)| < 10,000  12,256x faster than built-in zeta(s)
 
-References:
+Run tests:
 
- [1] A. Kuznetsov, "Simple and accurate approximations to the Riemann zeta function",
-     2025, https://arxiv.org/abs/2503.09519
+  >> test
 
- [2] A. Kuznetsov, "Computing the Barnes G-function and the gamma function
-     in the entire complex plane", Journal of Computational and Applied Mathematics,
-     Vol. 411, 2022, 114270. https://doi.org/10.1016/j.cam.2022.114270
+======================================================================
+MATLAB_Fortran_mex/
+======================================================================
 
- [3] A. Kuznetsov, A. Mohammadioroojeh, "Approximating functions on R^+
-     by exponential sums", 2025, https://arxiv.org/abs/2508.19095   
+Two MATLAB functions backed by a quadruple-precision Fortran core,
+accessed via MEX. All computations are performed internally in
+quadruple precision; results are returned as standard double-precision
+complex values.
+
+  Riemann_zeta_mex(s)        -- zeta(s) for scalar or array input
+  Riemann_zeta_prime_mex(s)  -- returns [zeta(s), zeta'(s)]
+                                for scalar or array input
+
+Accuracy: full double precision for |Im(s)| < 10^12.
+
+Speedup vs. MATLAB built-in zeta(s):
+
+  |Im(s)| < 100          79x
+  |Im(s)| < 1,000        99x
+  |Im(s)| < 10,000      463x
+  |Im(s)| < 100,000   5,728x
+
+Build (requires gfortran and MATLAB R2017b or later):
+
+  >> mex -setup Fortran    % one-time setup
+  >> build_mex
+
+Run tests:
+
+  >> test
+
+======================================================================
+Python/
+======================================================================
+
+Two  Python/NumPy functions:
+
+  Riemann_zeta(s)  -- zeta(s) for scalar, list, or NumPy array input
+  ln_gamma(z)      -- log(Gamma(z)) for scalar, list, or NumPy array
+
+Precision of Riemann_zeta:
+
+  |Im(s)| < 100      -- approximately 13 correct decimal digits
+  |Im(s)| < 1,000    -- approximately 12 correct decimal digits
+  |Im(s)| < 10,000   -- approximately 11 correct decimal digits
+
+Requirements: Python 3.8 or later, NumPy. matplotlib is required
+only for the plotting test in test.py.
+
+Run tests:
+
+  python3 test.py
+
+======================================================================
+Python_Fortran/
+======================================================================
+
+Python functions backed by a quadruple-precision Fortran core,
+accessed via f2py. All computations are performed internally in
+quadruple precision; results are returned as standard double-precision
+complex NumPy arrays.
+
+  Riemann_zeta(s)        -- zeta(s) for scalar or NumPy array input
+  Riemann_zeta_prime(s)  -- returns (zeta(s), zeta'(s))
+                            for scalar or NumPy array input
+  ln_gamma(z)            -- log(Gamma(z)) for scalar or NumPy array
+
+Accuracy: full double precision for |Im(s)| < 10^12.
+
+Requirements: Python 3.8 or later, NumPy (provides f2py), gfortran.
+
+Build (one-time setup):
+
+  chmod +x build.sh && ./build.sh
+
+Run tests:
+
+  python3 test.py
+
+======================================================================
+REFERENCES
+======================================================================
+
+[1] A. Kuznetsov, "Simple and accurate approximations to the Riemann
+    zeta function", 2025, https://arxiv.org/abs/2503.09519
+
+[2] A. Kuznetsov, "Computing the Barnes G-function and the gamma
+    function in the entire complex plane", Journal of Computational
+    and Applied Mathematics, Vol. 411, 2022, 114270.
+    https://doi.org/10.1016/j.cam.2022.114270
+
+[3] A. Kuznetsov, A. Mohammadioroojeh, "Approximating functions on
+    R^+ by exponential sums", 2025, https://arxiv.org/abs/2508.19095
