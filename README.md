@@ -26,14 +26,14 @@ The module gamma_zeta_module.f90 provides four public functions. All
 inputs must be scalars of type complex(kind=qp), where
 qp = selected_real_kind(33, 4931).
 
-  Riemann_zeta(s)        -- Riemann zeta function zeta(s)
+  Riemann_zeta(s)        -- Riemann zeta function zeta(s), near-quadruple precision
   
-  Riemann_zeta_prime(s)  -- returns array [zeta(s), zeta'(s)]
+  Riemann_zeta_prime(s)  -- returns array [zeta(s), zeta'(s)], near-quadruple precision
   
-  ln_gamma(z)            -- log(Gamma(z)), relative accuracy 10^{-33}
+  ln_gamma(z)            -- log(Gamma(z)), quadruple precision (relative accuracy 10^{-33})
   
   psi(z)                 -- digamma function psi(z)=Gamma'(z)/Gamma(z),
-                            relative accuracy 10^{-32}
+                            quadruple precision (relative accuracy 10^{-32})
 
 Precision of Riemann_zeta and Riemann_zeta_prime:
 
@@ -64,7 +64,7 @@ Precision of Riemann_zeta:
   |Im(s)| < 10,000   -- approximately 11 correct decimal digits
 
 While less accurate than MATLAB's built-in zeta(s), this
-implementation is significantly faster due to full vectorization:
+implementation is significantly faster:
 
   |Im(s)| < 100       -- 567x faster than built-in zeta(s)
   
