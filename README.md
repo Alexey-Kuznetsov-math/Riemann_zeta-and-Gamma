@@ -89,13 +89,13 @@ Accuracy: full double precision for |Im(s)| < 10^12.
 
 Speedup vs. MATLAB built-in zeta(s):
 
-  |Im(s)| < 100        --  79x
+  |Im(s)| < 100        --  100x
   
-  |Im(s)| < 1,000      --  99x
+  |Im(s)| < 1,000      --  120x
   
-  |Im(s)| < 10,000     -- 463x
+  |Im(s)| < 10,000     --  482x
   
-  |Im(s)| < 100,000    -- 5,728x
+  |Im(s)| < 100,000    -- 5,820x
 
 Python
 =======================================
