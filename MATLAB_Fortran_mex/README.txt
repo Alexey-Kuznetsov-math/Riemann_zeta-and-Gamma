@@ -4,7 +4,7 @@ Website: https://kuznetsovmath.ca/
 Email: akuznets@yorku.ca
 
 Created: 1-Dec-2025
-Last updated: 14-April-2026
+Last updated: 21-April-2026
 
 License: BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
 
@@ -120,10 +120,10 @@ zeta(s). Typical speedup factors measured on a desktop machine
 
     Range of |Im(s)|     Speedup vs. zeta(s)
     ----------------     --------------------
-    |Im(s)| < 100               79x
-    |Im(s)| < 1,000             99x
-    |Im(s)| < 10,000           463x
-    |Im(s)| < 100,000        5,728x
+    |Im(s)| < 100              100x
+    |Im(s)| < 1,000            120x
+    |Im(s)| < 10,000           482x
+    |Im(s)| < 100,000        5,820x
 
 Similarly, Riemann_zeta_prime_mex computes zeta(s) and zeta'(s)
 simultaneously and is substantially faster than calling the MATLAB
@@ -235,116 +235,117 @@ s = 5.000000000000000e-01 + 4.018392286005332e+02i
 s = 5.000000000000000e-01 + 4.018392286005332e+02i
 error = 0
 
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_mex function against the MATLAB built-in function zeta(s)
-
+ 
 Test (a): comparing the values of Riemann_zeta_mex(s) and zeta(s)
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<100, -5<Re(s)<10:
-
+ 
 Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
-    0.0624
-
+    0.0548
+ 
 Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
-    4.9266
+    5.4532
 
 the maximum mixed absolute/relative error is:
-   2.2268e-16
+   4.4411e-16
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_mex function against the MATLAB built-in function zeta(s)
-
+ 
 Test (b): comparing the values of Riemann_zeta_mex(s) and zeta(s)
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<1000, -5<Re(s)<10:
-
+ 
 Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
-    0.1347
-
+    0.1204
+ 
 Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
-   13.2988
+   14.4796
 
 the maximum mixed absolute/relative error is:
-   1.1103e-16
+   2.2217e-16
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_mex function against the MATLAB built-in function zeta(s)
-
+ 
 Test (c): comparing the values of Riemann_zeta_mex(s) and zeta(s)
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<10 000, -5<Re(s)<10:
-
+ 
 Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
-    0.1588
-
+    0.1527
+ 
 Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
-   73.5017
+   73.6357
 
 the maximum mixed absolute/relative error is:
-   1.1189e-16
+   5.2735e-17
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_mex function against the MATLAB built-in function zeta(s)
-
+ 
 Test (d): comparing the values of Riemann_zeta_mex(s) and zeta(s)
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<100 000, -5<Re(s)<10:
-
+ 
 Computation time (in seconds) of Riemann_zeta_mex(s) for these 1000 random numbers s_i:
-    0.1991
-
+    0.1893
+ 
 Computation time (in seconds) of MATLAB built-in function zeta(s) for these 1000 random numbers:
-   1.1405e+03
+   1.1019e+03
 
 the maximum mixed absolute/relative error is:
-   6.6616e-16
+   4.4792e-16
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_prime_mex function against the MATLAB built-in functions zeta(s) and zeta(1,s)
-
+ 
 Test (e): comparing the values of Riemann_zeta_prime_mex(s) and zeta(s), zeta(1,s)
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<100, -5<Re(s)<10:
-
+ 
 Computation time (in seconds) of Riemann_zeta_prime_mex(s) for these 1000 random numbers s_i:
-    0.0809
+    0.0650
 
 Computation time (in seconds) of MATLAB built-in functions zeta(s) and zeta(1,s) for these 1000 random numbers:
-   12.6782
+   12.8844
 
 the maximum mixed absolute/relative error for zeta(s) is:
-   2.2215e-16
+   1.1329e-16
 
 the maximum mixed absolute/relative error for derivative of zeta(s) is:
-   7.6127e-16
+   1.1102e-16
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_prime_mex function against the MATLAB built-in functions zeta(s) and zeta(1,s)
-
+ 
 Test (f): comparing the values of Riemann_zeta_prime_mex(s) and zeta(s), zeta(1,s)
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<1000, -5<Re(s)<10:
-
+ 
 Computation time (in seconds) of Riemann_zeta_prime_mex(s) for these 1000 random numbers s_i:
-    0.1687
-
+    0.1408
+ 
 Computation time (in seconds) of MATLAB built-in functions zeta(s) and zeta(1,s) for these 1000 random numbers:
-   35.7820
+   35.0687
 
 the maximum mixed absolute/relative error for zeta(s) is:
-   1.1104e-16
+   1.2143e-17
 
 the maximum mixed absolute/relative error for derivative of zeta(s) is:
-   1.1209e-16
+   2.2209e-16
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Testing the Riemann_zeta_prime_mex function against the MATLAB built-in functions zeta(s) and zeta(1,s)
-
+ 
 Test (g): comparing the values of Riemann_zeta_prime_mex(s) and zeta(s), zeta(1,s)
 for 1000 random numbers s_i, uniformly distributed in the rectangle |Im(s)|<10 000, -5<Re(s)<10:
-
+ 
 Computation time (in seconds) of Riemann_zeta_prime_mex(s) for these 1000 random numbers s_i:
-    0.1929
+    0.1774
 
 Computation time (in seconds) of MATLAB built-in functions zeta(s) and zeta(1,s) for these 1000 random numbers:
-  194.8419
+  187.3539
 
 the maximum mixed absolute/relative error for zeta(s) is:
-   2.2363e-16
+   4.4430e-16
 
 the maximum mixed absolute/relative error for derivative of zeta(s) is:
-   1.1454e-16
+   2.2256e-16
