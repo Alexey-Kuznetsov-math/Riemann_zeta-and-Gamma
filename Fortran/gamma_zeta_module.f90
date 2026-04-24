@@ -446,13 +446,13 @@ module gamma_zeta_module
     if (choose_f==0) then  ! compute only f(0)
     	sum1=1    	
         do j=0,((x-1)/210)
- 	do r=1,48
- 	    m=210*j+res210(r)
+ 	    do r=1,48
+ 	        m=210*j+res210(r)
             if (m>x) exit
- 	    if (m>1) sum1=sum1+exp(-s*log(real(m, kind=qp)))
-	end do   
-	end do	
-	f(0)=sum1/((1-u2)*(1-u3)*(1-u5)*(1-u7))	
+ 	        if (m>1) sum1=sum1+exp(-s*log(real(m, kind=qp)))
+	    end do   
+	    end do	
+	    f(0)=sum1/((1-u2)*(1-u3)*(1-u5)*(1-u7))	
     elseif (choose_f==1) then  ! compute only f(1)  
         x2=x/2; x3=x/3; x5=x/5; x7=x/7
         sum1=0 
@@ -471,8 +471,8 @@ module gamma_zeta_module
                 do
                     n5=n3; t5=t3
                     do
-	                n7=n5; t7=t5
-	                do                    
+	                    n7=n5; t7=t5
+	                    do                    
                             sum1=sum1+t7
                             if (n7>x7) exit
                             n7=7*n7; t7=t7*u7
@@ -508,8 +508,8 @@ module gamma_zeta_module
                 do
                     n5=n3; t5=t3; l5=l3
                     do
-	                n7=n5; t7=t5; l7=l5
-	                do                    
+	                    n7=n5; t7=t5; l7=l5
+	                    do                    
                             sum1=sum1+t7
                             sum2=sum2+l7*t7
                             if (n7>x7) exit
@@ -547,8 +547,8 @@ module gamma_zeta_module
                 do
                     n5=n3; t5=t3; g5=g3
                     do
-	                n7=n5; t7=t5; g7=g5
-	                do                    
+	                    n7=n5; t7=t5; g7=g5
+	                    do                    
                             sum1=sum1+t7
                             sum3=sum3+g7
                             if (n7>x7) exit
@@ -587,8 +587,8 @@ module gamma_zeta_module
                 do
                     n5=n3; t5=t3; g5=g3; l5=l3
                     do
-	                n7=n5; t7=t5; g7=g5; l7=l5
-	                do                    
+	                    n7=n5; t7=t5; g7=g5; l7=l5
+	                    do                    
                             sum1=sum1+t7
                             sum2=sum2+l7*t7
                             sum3=sum3+g7
